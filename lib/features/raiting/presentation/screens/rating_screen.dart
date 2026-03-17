@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:treemov/app/di/di.config.dart';
-import 'package:treemov/core/network/dio_client.dart';
 import 'package:treemov/core/themes/app_colors.dart';
-import 'package:treemov/features/raiting/data/repositories/rating_repository_impl.dart';
 import 'package:treemov/features/raiting/presentation/blocs/rating_bloc.dart';
 import 'package:treemov/features/raiting/presentation/blocs/rating_event.dart';
 import 'package:treemov/features/raiting/presentation/blocs/rating_state.dart';
@@ -26,75 +23,35 @@ class RatingScreen extends StatefulWidget {
 class _RatingScreenState extends State<RatingScreen> {
   late RatingBloc _ratingBloc;
   bool _showPinnedCard = true;
-  bool _isInitialized = false;
-
-  StudentsLoaded? _cachedState;
 
   @override
   void initState() {
     super.initState();
-    debugPrint('RatingScreen: initState');
-    _initializeBloc();
-  }
-
-  Future<void> _initializeBloc() async {
-    try {
-      final dioClient = getIt<DioClient>();
-      final prefs = await SharedPreferences.getInstance();
-      final repository = RatingRepositoryImpl(dioClient, prefs);
-      _ratingBloc = RatingBloc(repository);
-
-      if (mounted) {
-        _isInitialized = true;
-        _loadData();
-        setState(() {});
-      }
-    } catch (e) {
-      debugPrint('RatingScreen: ошибка инициализации - $e');
-      if (mounted) {
-        setState(() {
-          _isInitialized = true;
-        });
-      }
-    }
+    _ratingBloc = getIt<RatingBloc>();
+    _loadData();
   }
 
   void _loadData() {
-    debugPrint('RatingScreen: загружаем данные');
     _ratingBloc.add(const LoadStudentGroupsEvent());
     _ratingBloc.add(const LoadCurrentStudentEvent());
   }
 
   @override
   void dispose() {
-    debugPrint('RatingScreen: dispose');
     _ratingBloc.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_isInitialized) {
-      return const RatingLoadingWidget();
-    }
-
     return BlocProvider<RatingBloc>.value(
       value: _ratingBloc,
       child: BlocBuilder<RatingBloc, RatingState>(
-        buildWhen: (previous, current) {
-          if (current is RatingLoading && _cachedState != null) {
-            return false;
-          }
-          return true;
-        },
         builder: (context, state) {
           if (state is StudentsLoaded) {
-            _cachedState = state;
             return _buildContent(state);
           } else if (state is RatingError) {
             return _buildErrorContent();
-          } else if (state is RatingLoading && _cachedState != null) {
-            return _buildContent(_cachedState!);
           } else if (state is RatingLoading) {
             return const RatingLoadingWidget();
           }
@@ -136,9 +93,7 @@ class _RatingScreenState extends State<RatingScreen> {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () {
-                  _ratingBloc.add(const LoadStudentGroupsEvent());
-                },
+                onPressed: _loadData,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: AppColors.achievementDeepBlue,
@@ -174,7 +129,6 @@ class _RatingScreenState extends State<RatingScreen> {
           children: [
             RefreshIndicator(
               onRefresh: () async {
-                debugPrint('RatingScreen: ручное обновление');
                 if (state.selectedGroup != null) {
                   _ratingBloc.add(
                     LoadStudentsForGroupEvent(state.selectedGroup!),
