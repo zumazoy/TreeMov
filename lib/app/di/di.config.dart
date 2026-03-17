@@ -61,7 +61,7 @@ void setupDependencies() {
   getIt.registerLazySingleton<NavigationService>(() => NavigationService());
   getIt.registerSingleton<SettingsService>(SettingsService());
 
-  // Источники данных - ВСЕ RemoteDataSource ДО репозиториев
+  // Источники данных
   getIt.registerSingleton<AuthRemoteDataSource>(
     AuthRemoteDataSource(getIt<DioClient>()),
   );
@@ -92,15 +92,14 @@ void setupDependencies() {
       getIt<SecureStorageRepository>(),
     ),
   );
-
   // getIt.registerSingleton<TeacherNotesRemoteDataSource>(
   //   TeacherNotesRemoteDataSource(getIt<DioClient>()),
   // );
-
   getIt.registerSingleton<RatingRemoteDataSource>(
     RatingRemoteDataSource(getIt<DioClient>()),
   );
 
+  // Репозитории
   getIt.registerSingleton<AuthRepository>(
     AuthRepositoryImpl(getIt<AuthRemoteDataSource>()),
   );

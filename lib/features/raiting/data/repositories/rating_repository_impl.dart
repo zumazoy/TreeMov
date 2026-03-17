@@ -7,7 +7,7 @@ import 'package:treemov/shared/domain/entities/student_entity.dart';
 class RatingRepositoryImpl implements RatingRepository {
   final RatingRemoteDataSource _remoteDataSource;
 
-  RatingRepositoryImpl(this._remoteDataSource); // Только 1 аргумент!
+  RatingRepositoryImpl(this._remoteDataSource);
 
   @override
   Future<List<StudentEntity>> getStudents() async {
