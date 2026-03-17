@@ -98,6 +98,7 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
   }
 
   Future<void> _selectDate(bool isStart) async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final initialDate = isStart ? _startDate : _endDate;
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -106,10 +107,17 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
       lastDate: DateTime(2030),
       builder: (context, child) {
         return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: const ColorScheme.light(
+          data: (isDark ? ThemeData.dark() : ThemeData.light()).copyWith(
+            colorScheme: ColorScheme(
+              brightness: isDark ? Brightness.dark : Brightness.light,
               primary: AppColors.teacherPrimary,
               onPrimary: AppColors.white,
+              secondary: AppColors.teacherPrimary,
+              onSecondary: AppColors.white,
+              error: Colors.red,
+              onError: Colors.white,
+              surface: isDark ? AppColors.darkSurface : AppColors.white,
+              onSurface: isDark ? AppColors.darkText : AppColors.notesDarkText,
             ),
           ),
           child: child!,
@@ -150,6 +158,7 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final screenHeight = MediaQuery.of(context).size.height;
     final maxModalHeight = screenHeight * 0.9;
 
@@ -157,7 +166,7 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
       padding: const EdgeInsets.all(20),
       constraints: BoxConstraints(maxHeight: maxModalHeight),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -180,19 +189,24 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
   }
 
   Widget _buildHeader() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
+        Text(
           'Создать отчет',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: AppColors.notesDarkText,
+            color: isDark ? AppColors.darkText : AppColors.notesDarkText,
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.close, color: AppColors.teacherPrimary),
+          icon: Icon(
+            Icons.close,
+            color: isDark ? AppColors.darkText : AppColors.teacherPrimary,
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ],
@@ -200,14 +214,18 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
   }
 
   Widget _buildStepOne() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Выберите тип отчета:',
           style: TextStyle(
             fontSize: 14,
-            color: AppColors.directoryTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.directoryTextSecondary,
           ),
         ),
         const SizedBox(height: 12),
@@ -239,6 +257,8 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
   }
 
   Widget _buildStepTwo() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     String reportTitle;
     String reportDescription;
     IconData reportIcon;
@@ -276,12 +296,12 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
           onTap: () {},
         ),
         const SizedBox(height: 16),
-        const Text(
+        Text(
           'Период:',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: AppColors.notesDarkText,
+            color: isDark ? AppColors.darkText : AppColors.notesDarkText,
           ),
         ),
         const SizedBox(height: 8),
@@ -314,12 +334,12 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
             ],
           ),
 
-        const Text(
+        Text(
           'Дополнительные параметры:',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: AppColors.notesDarkText,
+            color: isDark ? AppColors.darkText : AppColors.notesDarkText,
           ),
         ),
         const SizedBox(height: 8),
@@ -346,17 +366,23 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
     String title,
     String subtitle,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isSelected = _selectedPeriod == period;
+
     return GestureDetector(
       onTap: () => setState(() => _selectedPeriod = period),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.eventTap : AppColors.white,
+          color: isSelected
+              ? (isDark ? AppColors.darkEventTap : AppColors.eventTap)
+              : (isDark ? AppColors.darkSurface : AppColors.white),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.teacherPrimary : AppColors.eventTap,
+            color: isSelected
+                ? AppColors.teacherPrimary
+                : (isDark ? AppColors.darkSurface : AppColors.eventTap),
             width: 1.5,
           ),
         ),
@@ -365,18 +391,20 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
           children: [
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
-                color: AppColors.grayFieldText,
+                color: isDark ? AppColors.darkText : AppColors.grayFieldText,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                color: AppColors.directoryTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.directoryTextSecondary,
               ),
             ),
           ],
@@ -386,6 +414,8 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
   }
 
   Widget _buildDateInput(bool isStart, DateTime date) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () => _selectDate(isStart),
       child: Column(
@@ -393,33 +423,42 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
         children: [
           Text(
             isStart ? 'Начальная дата' : 'Конечная дата',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
-              color: AppColors.directoryTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.directoryTextSecondary,
             ),
           ),
           const SizedBox(height: 4),
           Container(
             height: 44,
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: isDark ? AppColors.darkCard : AppColors.white,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppColors.eventTap, width: 1),
+              border: Border.all(
+                color: isDark ? AppColors.darkSurface : AppColors.eventTap,
+                width: 1,
+              ),
             ),
             child: Row(
               children: [
                 const SizedBox(width: 12),
-                const Icon(
+                Icon(
                   Icons.calendar_today,
                   size: 20,
-                  color: AppColors.grayFieldText,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.grayFieldText,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   _formatDate(date),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: AppColors.grayFieldText,
+                    color: isDark
+                        ? AppColors.darkText
+                        : AppColors.grayFieldText,
                   ),
                 ),
               ],
@@ -436,16 +475,22 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
     bool value,
     Function(bool) onChanged,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () => onChanged(!value),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
-          color: value ? AppColors.eventTap : AppColors.white,
+          color: value
+              ? (isDark ? AppColors.darkEventTap : AppColors.eventTap)
+              : (isDark ? AppColors.darkSurface : AppColors.white),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: value ? AppColors.teacherPrimary : AppColors.eventTap,
+            color: value
+                ? AppColors.teacherPrimary
+                : (isDark ? AppColors.darkSurface : AppColors.eventTap),
             width: 1.5,
           ),
         ),
@@ -459,10 +504,12 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
                 border: Border.all(
                   color: value
                       ? AppColors.teacherPrimary
-                      : AppColors.directoryTextSecondary,
+                      : (isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.directoryTextSecondary),
                   width: value ? 6 : 2,
                 ),
-                color: AppColors.white,
+                color: isDark ? AppColors.darkCard : AppColors.white,
               ),
             ),
             const SizedBox(width: 12),
@@ -472,18 +519,22 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: AppColors.grayFieldText,
+                      color: isDark
+                          ? AppColors.darkText
+                          : AppColors.grayFieldText,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.directoryTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.directoryTextSecondary,
                     ),
                   ),
                 ],
@@ -496,6 +547,7 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
   }
 
   Widget _buildFooter() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isStepOneComplete = _currentStep == 1 && _selectedReportType != null;
 
     return Padding(
@@ -509,11 +561,15 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
                   : _backStep,
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
-                side: const BorderSide(color: AppColors.teacherPrimary),
+                side: BorderSide(
+                  color: isDark ? AppColors.darkText : AppColors.teacherPrimary,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                foregroundColor: AppColors.teacherPrimary,
+                foregroundColor: isDark
+                    ? AppColors.darkText
+                    : AppColors.teacherPrimary,
               ),
               child: Text(_currentStep == 1 ? 'Отмена' : 'Назад'),
             ),
@@ -536,8 +592,12 @@ class _ReportCreationModalState extends State<ReportCreationModal> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                disabledBackgroundColor: AppColors.eventTap,
-                disabledForegroundColor: AppColors.directoryTextSecondary,
+                disabledBackgroundColor: isDark
+                    ? AppColors.darkSurface
+                    : AppColors.eventTap,
+                disabledForegroundColor: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.directoryTextSecondary,
               ),
             ),
           ),

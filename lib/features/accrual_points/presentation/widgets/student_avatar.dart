@@ -10,33 +10,45 @@ class StudentAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final avatarSize = size;
+
     return Container(
-      width: 52,
-      height: 52,
+      width: avatarSize,
+      height: avatarSize,
       decoration: BoxDecoration(
-        color: AppColors.directoryAvatarBackground,
-        borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: AppColors.directoryAvatarBorder, width: 2),
+        color: isDark
+            ? AppColors.darkSurface
+            : AppColors.directoryAvatarBackground,
+        borderRadius: BorderRadius.circular(avatarSize / 2),
+        border: Border.all(
+          color: isDark ? AppColors.darkCard : AppColors.directoryAvatarBorder,
+          width: 2,
+        ),
       ),
       child: avatarUrl != null
           ? ClipRRect(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(avatarSize / 2 - 2),
               child: Image.network(
                 avatarUrl!,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return const Icon(
+                  return Icon(
                     Icons.person,
-                    color: AppColors.directoryTextSecondary,
-                    size: 28,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.directoryTextSecondary,
+                    size: avatarSize / 2,
                   );
                 },
               ),
             )
-          : const Icon(
+          : Icon(
               Icons.person,
-              color: AppColors.directoryTextSecondary,
-              size: 28,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.directoryTextSecondary,
+              size: avatarSize / 2,
             ),
     );
   }

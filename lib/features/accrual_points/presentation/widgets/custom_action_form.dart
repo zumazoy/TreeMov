@@ -30,7 +30,12 @@ class _CustomActionFormState extends State<CustomActionForm> {
 
     if (title.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Введите заголовок действия')),
+        SnackBar(
+          content: Text('Введите заголовок действия'),
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.darkSurface
+              : null,
+        ),
       );
       return;
     }
@@ -40,12 +45,19 @@ class _CustomActionFormState extends State<CustomActionForm> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Card(
       elevation: 0,
-      color: AppColors.white,
+      color: isDark ? AppColors.darkSurface : AppColors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: const BorderSide(color: AppColors.teacherPrimary, width: 1),
+        side: BorderSide(
+          color: isDark
+              ? AppColors.teacherPrimary.withAlpha(128)
+              : AppColors.teacherPrimary,
+          width: 1,
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -54,7 +66,7 @@ class _CustomActionFormState extends State<CustomActionForm> {
           children: [
             Text(
               'Создать свое действие',
-              style: AppTextStyles.arial14W700.dark,
+              style: AppTextStyles.arial14W700.themed(context),
             ),
             const SizedBox(height: 16),
 
@@ -62,27 +74,35 @@ class _CustomActionFormState extends State<CustomActionForm> {
               controller: _titleController,
               decoration: InputDecoration(
                 labelText: 'Заголовок действия',
+                labelStyle: AppTextStyles.arial14W400.copyWith(
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.grayFieldText,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.eventTap),
+                  borderSide: BorderSide(
+                    color: isDark ? AppColors.darkSurface : AppColors.eventTap,
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.eventTap),
+                  borderSide: BorderSide(
+                    color: isDark ? AppColors.darkSurface : AppColors.eventTap,
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(color: AppColors.teacherPrimary),
                 ),
+                filled: true,
+                fillColor: isDark ? AppColors.darkCard : AppColors.white,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 12,
                 ),
-                labelStyle: AppTextStyles.arial14W400.copyWith(
-                  color: AppColors.grayFieldText,
-                ),
               ),
-              style: AppTextStyles.arial14W400.dark,
+              style: AppTextStyles.arial14W400.themed(context),
             ),
             const SizedBox(height: 12),
 
@@ -90,27 +110,35 @@ class _CustomActionFormState extends State<CustomActionForm> {
               controller: _descriptionController,
               decoration: InputDecoration(
                 labelText: 'Описание (необязательно)',
+                labelStyle: AppTextStyles.arial14W400.copyWith(
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.grayFieldText,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.eventTap),
+                  borderSide: BorderSide(
+                    color: isDark ? AppColors.darkSurface : AppColors.eventTap,
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.eventTap),
+                  borderSide: BorderSide(
+                    color: isDark ? AppColors.darkSurface : AppColors.eventTap,
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(color: AppColors.teacherPrimary),
                 ),
+                filled: true,
+                fillColor: isDark ? AppColors.darkCard : AppColors.white,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 12,
                 ),
-                labelStyle: AppTextStyles.arial14W400.copyWith(
-                  color: AppColors.grayFieldText,
-                ),
               ),
-              style: AppTextStyles.arial14W400.dark,
+              style: AppTextStyles.arial14W400.themed(context),
               maxLines: 2,
             ),
             const SizedBox(height: 12),
@@ -121,27 +149,35 @@ class _CustomActionFormState extends State<CustomActionForm> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Количество баллов',
+                labelStyle: AppTextStyles.arial14W400.copyWith(
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.grayFieldText,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.eventTap),
+                  borderSide: BorderSide(
+                    color: isDark ? AppColors.darkSurface : AppColors.eventTap,
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.eventTap),
+                  borderSide: BorderSide(
+                    color: isDark ? AppColors.darkSurface : AppColors.eventTap,
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(color: AppColors.teacherPrimary),
                 ),
+                filled: true,
+                fillColor: isDark ? AppColors.darkCard : AppColors.white,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 12,
                 ),
-                labelStyle: AppTextStyles.arial14W400.copyWith(
-                  color: AppColors.grayFieldText,
-                ),
               ),
-              style: AppTextStyles.arial14W400.dark,
+              style: AppTextStyles.arial14W400.themed(context),
             ),
             const SizedBox(height: 8),
 
@@ -150,7 +186,9 @@ class _CustomActionFormState extends State<CustomActionForm> {
               child: Text(
                 'Введите число баллов',
                 style: AppTextStyles.arial11W400.copyWith(
-                  color: AppColors.grayFieldText,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.grayFieldText,
                 ),
               ),
             ),
@@ -162,9 +200,17 @@ class _CustomActionFormState extends State<CustomActionForm> {
                   child: OutlinedButton(
                     onPressed: widget.onCancel,
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.notesDarkText,
-                      side: const BorderSide(color: AppColors.eventTap),
-                      backgroundColor: AppColors.white,
+                      foregroundColor: isDark
+                          ? AppColors.darkText
+                          : AppColors.notesDarkText,
+                      side: BorderSide(
+                        color: isDark
+                            ? AppColors.darkSurface
+                            : AppColors.eventTap,
+                      ),
+                      backgroundColor: isDark
+                          ? AppColors.darkSurface
+                          : AppColors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -172,7 +218,7 @@ class _CustomActionFormState extends State<CustomActionForm> {
                     ),
                     child: Text(
                       'Отмена',
-                      style: AppTextStyles.arial14W400.dark,
+                      style: AppTextStyles.arial14W400.themed(context),
                     ),
                   ),
                 ),
@@ -182,7 +228,7 @@ class _CustomActionFormState extends State<CustomActionForm> {
                     onPressed: _onSave,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.teacherPrimary,
-                      foregroundColor: AppColors.white,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),

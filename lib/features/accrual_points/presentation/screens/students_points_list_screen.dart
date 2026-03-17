@@ -119,6 +119,8 @@ class _StudentsPointsListScreenState extends State<StudentsPointsListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocListener<AccrualBloc, AccrualState>(
       bloc: widget.accrualBloc,
       listener: (context, state) {
@@ -139,14 +141,21 @@ class _StudentsPointsListScreenState extends State<StudentsPointsListScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? AppColors.darkBackground : AppColors.white,
         appBar: AppBar(
           title: Text(
             widget.group.title ?? 'Группа',
-            style: AppTextStyles.arial18W700.dark,
+            style: AppTextStyles.arial18W700.themed(context),
           ),
-          backgroundColor: AppColors.white,
+          backgroundColor: isDark ? AppColors.darkBackground : AppColors.white,
           elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: isDark ? AppColors.darkText : AppColors.notesDarkText,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
         body: Column(
           children: [
@@ -167,22 +176,33 @@ class _StudentsPointsListScreenState extends State<StudentsPointsListScreen> {
   }
 
   Widget _buildContent() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     if (_hasSearchQuery && _filteredStudents.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.person_search,
               size: 64,
-              color: AppColors.directoryTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.directoryTextSecondary,
             ),
             const SizedBox(height: 16),
-            Text('Ученики не найдены', style: AppTextStyles.arial16W700.dark),
+            Text(
+              'Ученики не найдены',
+              style: AppTextStyles.arial16W700.themed(context),
+            ),
             const SizedBox(height: 8),
             Text(
               'Попробуйте изменить поисковый запрос',
-              style: AppTextStyles.arial14W400.grey,
+              style: AppTextStyles.arial14W400.copyWith(
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.directoryTextSecondary,
+              ),
             ),
           ],
         ),
@@ -194,20 +214,26 @@ class _StudentsPointsListScreenState extends State<StudentsPointsListScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.group_outlined,
               size: 64,
-              color: AppColors.directoryTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.directoryTextSecondary,
             ),
             const SizedBox(height: 16),
             Text(
               'В группе нет учеников',
-              style: AppTextStyles.arial16W700.dark,
+              style: AppTextStyles.arial16W700.themed(context),
             ),
             const SizedBox(height: 8),
             Text(
               'Добавьте учеников в группу',
-              style: AppTextStyles.arial14W400.grey,
+              style: AppTextStyles.arial14W400.copyWith(
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.directoryTextSecondary,
+              ),
             ),
           ],
         ),
@@ -219,18 +245,22 @@ class _StudentsPointsListScreenState extends State<StudentsPointsListScreen> {
       itemCount: _filteredStudents.length,
       itemBuilder: (context, index) {
         final student = _filteredStudents[index];
-        return _buildStudentCard(student);
+        return _buildStudentCard(context, student);
       },
     );
   }
 
-  Widget _buildStudentCard(StudentEntity student) {
+  Widget _buildStudentCard(BuildContext context, StudentEntity student) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border.all(color: AppColors.directoryBorder),
+        color: isDark ? AppColors.darkCard : AppColors.white,
+        border: Border.all(
+          color: isDark ? AppColors.darkSurface : AppColors.directoryBorder,
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -244,7 +274,7 @@ class _StudentsPointsListScreenState extends State<StudentsPointsListScreen> {
               children: [
                 Text(
                   '${student.name ?? ''} ${student.surname ?? ''}',
-                  style: AppTextStyles.arial16W700.dark,
+                  style: AppTextStyles.arial16W700.themed(context),
                 ),
                 const SizedBox(height: 4),
                 Row(
@@ -253,12 +283,27 @@ class _StudentsPointsListScreenState extends State<StudentsPointsListScreen> {
                       'assets/images/energy_icon.png',
                       width: 16,
                       height: 16,
-                      color: AppColors.directoryTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.directoryTextSecondary,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Icon(
+                          Icons.bolt,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.directoryTextSecondary,
+                          size: 16,
+                        );
+                      },
                     ),
                     const SizedBox(width: 4),
                     Text(
                       '${student.score} баллов',
-                      style: AppTextStyles.arial12W400.grey,
+                      style: AppTextStyles.arial12W400.copyWith(
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.directoryTextSecondary,
+                      ),
                     ),
                   ],
                 ),
@@ -275,11 +320,8 @@ class _StudentsPointsListScreenState extends State<StudentsPointsListScreen> {
             ),
             child: TextButton.icon(
               onPressed: () => _showActionSelectionDialog(student),
-              icon: const Icon(Icons.add, color: AppColors.white, size: 16),
-              label: Text(
-                'Начислить',
-                style: AppTextStyles.arial12W400.white, // 👈
-              ),
+              icon: const Icon(Icons.add, color: Colors.white, size: 16),
+              label: Text('Начислить', style: AppTextStyles.arial12W400.white),
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
                 minimumSize: Size.zero,

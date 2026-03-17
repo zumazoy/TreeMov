@@ -117,38 +117,47 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Widget _buildCreateReportSection() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: isDark ? AppColors.darkCard : AppColors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.directoryBorder, width: 1),
+          border: Border.all(
+            color: isDark ? AppColors.darkSurface : AppColors.directoryBorder,
+            width: 1,
+          ),
         ),
         child: Column(
           children: [
-            const Icon(
+            Icon(
               Icons.description_outlined,
               size: 40,
-              color: AppColors.directoryTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.directoryTextSecondary,
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Создать новый отчет',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: AppColors.grayFieldText,
+                color: isDark ? AppColors.darkText : AppColors.grayFieldText,
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
+            Text(
               'Выберите отчет и период для генерации',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
-                color: AppColors.directoryTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.directoryTextSecondary,
               ),
             ),
             const SizedBox(height: 16),
@@ -175,32 +184,37 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final filteredReports = _filteredReports;
 
     // В BLoC приложении этот код будет обернут в BlocConsumer
 
     return Scaffold(
-      backgroundColor: AppColors.notesBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.notesBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.notesBackground,
+        backgroundColor: isDark
+            ? AppColors.darkBackground
+            : AppColors.notesBackground,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        title: const Row(
+        title: Row(
           children: [
             Icon(
               Icons.description_outlined,
-              color: AppColors.notesDarkText,
+              color: isDark ? AppColors.darkText : AppColors.notesDarkText,
               size: 28,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               'Отчеты',
               style: TextStyle(
                 fontFamily: 'TT Norms',
                 fontWeight: FontWeight.w900,
                 fontSize: 22,
-                color: AppColors.notesDarkText,
+                color: isDark ? AppColors.darkText : AppColors.notesDarkText,
               ),
             ),
           ],
@@ -229,9 +243,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Все отчеты',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? AppColors.darkText : null,
+                  ),
                 ),
                 _buildFilterButton(),
               ],
@@ -260,6 +278,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Widget _buildCategoryFilters() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final List<String> categories = [
       'Все отчеты',
       'Успеваемость',
@@ -286,18 +305,22 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   fontSize: 12,
                   color: isSelected
                       ? AppColors.white
-                      : AppColors.teacherPrimary,
+                      : (isDark
+                            ? AppColors.darkText
+                            : AppColors.teacherPrimary),
                 ),
               ),
               selected: isSelected,
               onSelected: (selected) => _onFilterSelected(category),
               selectedColor: AppColors.teacherPrimary,
-              backgroundColor: AppColors.eventTap,
+              backgroundColor: isDark
+                  ? AppColors.darkSurface
+                  : AppColors.eventTap,
               checkmarkColor: AppColors.white,
               side: BorderSide(
                 color: isSelected
                     ? AppColors.teacherPrimary
-                    : AppColors.eventTap,
+                    : (isDark ? AppColors.darkSurface : AppColors.eventTap),
                 width: 1,
               ),
               shape: RoundedRectangleBorder(
@@ -312,19 +335,21 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Widget _buildFilterButton() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return TextButton.icon(
       onPressed: _showFilterModal,
-      icon: const Icon(
+      icon: Icon(
         Icons.filter_list,
         size: 20,
-        color: AppColors.grayFieldText,
+        color: isDark ? AppColors.darkTextSecondary : AppColors.grayFieldText,
       ),
-      label: const Text(
+      label: Text(
         'Фильтр',
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: AppColors.grayFieldText,
+          color: isDark ? AppColors.darkTextSecondary : AppColors.grayFieldText,
         ),
       ),
       style: TextButton.styleFrom(
