@@ -14,7 +14,7 @@ class SharedRemoteDataSource extends BaseRemoteDataSource {
   Future<OrgMemberResponseModel> getMyOrgMember() async {
     final orgMemberId = await _secureStorageRepository.getOrgMemberId();
     final orgMembers = await getList(
-      path: ApiConstants.myOrgs,
+      path: ApiConstants.orgs + ApiConstants.me,
       fromJson: OrgMemberResponseModel.fromJson,
     );
 
@@ -31,7 +31,7 @@ class SharedRemoteDataSource extends BaseRemoteDataSource {
     DateTime dateMax,
   ) {
     return getList(
-      path: ApiConstants.lessons,
+      path: ApiConstants.lessons + ApiConstants.me,
       fromJson: LessonResponseModel.fromJson,
       queryParameters: {
         'date_min': dateMin.toIso8601String(),
