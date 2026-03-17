@@ -114,6 +114,8 @@ class _ActionSelectionDialogState extends State<ActionSelectionDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocListener<AccrualBloc, AccrualState>(
       bloc: widget.accrualBloc,
       listener: (context, state) {
@@ -127,7 +129,9 @@ class _ActionSelectionDialogState extends State<ActionSelectionDialog> {
         }
       },
       child: Dialog(
-        backgroundColor: AppColors.notesBackground,
+        backgroundColor: isDark
+            ? AppColors.darkCard
+            : AppColors.notesBackground,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -139,7 +143,12 @@ class _ActionSelectionDialogState extends State<ActionSelectionDialog> {
 
               const SizedBox(height: 16),
 
-              Text('Категория:', style: AppTextStyles.arial16W400.grey),
+              Text(
+                'Категория:',
+                style: AppTextStyles.arial16W400.copyWith(
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.grey,
+                ),
+              ),
               const SizedBox(height: 8),
 
               CategoryButtons(
@@ -150,7 +159,14 @@ class _ActionSelectionDialogState extends State<ActionSelectionDialog> {
               const SizedBox(height: 16),
 
               if (_selectedCategory != null && !_showCustomAction) ...[
-                Text('Действие:', style: AppTextStyles.arial16W400.grey),
+                Text(
+                  'Действие:',
+                  style: AppTextStyles.arial16W400.copyWith(
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.grey,
+                  ),
+                ),
                 const SizedBox(height: 8),
 
                 _buildActionsList(),
@@ -192,42 +208,53 @@ class _ActionSelectionDialogState extends State<ActionSelectionDialog> {
   }
 
   Widget _buildActionItem(PointAction action) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isPositive = action.points > 0;
     final isZero = action.points == 0;
     final isSelected = _selectedAction?.id == action.id;
 
+    // Адаптируем цвета для темной темы
     final chipBgColor = isPositive
-        ? AppColors.statsTotalBg
+        ? (isDark ? AppColors.darkCategoryStudyBg : AppColors.statsTotalBg)
         : isZero
-        ? AppColors.eventTap
-        : AppColors.eventNegativeBg;
+        ? (isDark ? AppColors.darkEventTap : AppColors.eventTap)
+        : (isDark
+              ? AppColors.darkCategoryGeneralBg
+              : AppColors.eventNegativeBg);
 
     final chipTextColor = isPositive
-        ? AppColors.statsTotalText
+        ? (isDark ? AppColors.darkCategoryStudyText : AppColors.statsTotalText)
         : isZero
-        ? AppColors.teacherPrimary
-        : AppColors.activityRed;
+        ? (isDark ? AppColors.darkText : AppColors.teacherPrimary)
+        : (isDark ? AppColors.darkCategoryGeneralText : AppColors.activityRed);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       elevation: 0,
-      color: isSelected ? AppColors.eventTap : AppColors.white,
+      color: isSelected
+          ? (isDark ? AppColors.darkEventTap : AppColors.eventTap)
+          : (isDark ? AppColors.darkSurface : AppColors.white),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
         side: BorderSide(
           color: isSelected
               ? AppColors.teacherPrimary
-              : AppColors.directoryBorder,
+              : (isDark ? AppColors.darkSurface : AppColors.directoryBorder),
           width: 1,
         ),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        title: Text(action.title, style: AppTextStyles.arial14W700.dark),
+        title: Text(
+          action.title,
+          style: AppTextStyles.arial14W700.themed(context),
+        ),
         subtitle: Text(
           action.description,
           style: AppTextStyles.arial12W400.copyWith(
-            color: AppColors.grayFieldText,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.grayFieldText,
           ),
         ),
         trailing: Container(
@@ -247,13 +274,18 @@ class _ActionSelectionDialogState extends State<ActionSelectionDialog> {
   }
 
   Widget _buildCustomActionItem() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       elevation: 0,
-      color: AppColors.white,
+      color: isDark ? AppColors.darkSurface : AppColors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: const BorderSide(color: AppColors.directoryBorder, width: 1),
+        side: BorderSide(
+          color: isDark ? AppColors.darkSurface : AppColors.directoryBorder,
+          width: 1,
+        ),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -261,16 +293,24 @@ class _ActionSelectionDialogState extends State<ActionSelectionDialog> {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: AppColors.eventTap,
+            color: isDark ? AppColors.darkEventTap : AppColors.eventTap,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: const Icon(Icons.add, color: AppColors.teacherPrimary),
+          child: Icon(
+            Icons.add,
+            color: isDark ? AppColors.darkText : AppColors.teacherPrimary,
+          ),
         ),
-        title: Text('Создать действие', style: AppTextStyles.arial14W700.dark),
+        title: Text(
+          'Создать действие',
+          style: AppTextStyles.arial14W700.themed(context),
+        ),
         subtitle: Text(
           'Настроить свое действие',
           style: AppTextStyles.arial12W400.copyWith(
-            color: AppColors.grayFieldText,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.grayFieldText,
           ),
         ),
         onTap: _onCustomActionSelected,
@@ -279,6 +319,8 @@ class _ActionSelectionDialogState extends State<ActionSelectionDialog> {
   }
 
   Widget _buildConfirmationButtons() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final buttonText = _selectedAction == null
         ? 'Выберите действие'
         : 'Подтвердить ${_selectedAction!.points > 0 ? '+' : ''}${_selectedAction!.points}';
@@ -287,9 +329,11 @@ class _ActionSelectionDialogState extends State<ActionSelectionDialog> {
     Color buttonColor;
     if (_selectedAction != null) {
       if (_selectedAction!.points > 0) {
-        buttonColor = Colors.green;
+        buttonColor = isDark ? AppColors.darkCategoryStudyBg : Colors.green;
       } else if (_selectedAction!.points < 0) {
-        buttonColor = AppColors.activityRed;
+        buttonColor = isDark
+            ? AppColors.darkCategoryGeneralBg
+            : AppColors.activityRed;
       } else {
         buttonColor = AppColors.teacherPrimary;
       }
@@ -303,24 +347,39 @@ class _ActionSelectionDialogState extends State<ActionSelectionDialog> {
           child: OutlinedButton(
             onPressed: _onClose,
             style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.notesDarkText,
-              side: const BorderSide(color: AppColors.directoryBorder),
-              backgroundColor: AppColors.white,
+              foregroundColor: isDark
+                  ? AppColors.darkText
+                  : AppColors.notesDarkText,
+              side: BorderSide(
+                color: isDark
+                    ? AppColors.darkSurface
+                    : AppColors.directoryBorder,
+              ),
+              backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
               padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
-            child: Text('Отмена', style: AppTextStyles.arial14W400.dark),
+            child: Text(
+              'Отмена',
+              style: AppTextStyles.arial14W400.themed(context),
+            ),
           ),
         ),
         const SizedBox(width: 8),
         Expanded(
           child: ElevatedButton(
-            onPressed: _createAccrual,
+            onPressed: _selectedAction != null ? _createAccrual : null,
             style: ElevatedButton.styleFrom(
               backgroundColor: buttonColor,
-              foregroundColor: AppColors.white,
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: isDark
+                  ? AppColors.darkSurface
+                  : Colors.grey.shade300,
+              disabledForegroundColor: isDark
+                  ? AppColors.darkTextSecondary
+                  : Colors.grey.shade600,
               padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(6),

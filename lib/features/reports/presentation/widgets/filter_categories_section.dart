@@ -27,17 +27,21 @@ class ReportFilterCategoriesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Категория:',
           style: TextStyle(
             fontFamily: 'Arial',
             fontWeight: FontWeight.w700,
             fontSize: 16,
             height: 1.0,
-            color: AppColors.directoryTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.directoryTextSecondary,
           ),
         ),
         const SizedBox(height: 12),
@@ -73,14 +77,20 @@ class _ReportCategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onSelected,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.eventTap : AppColors.white,
+          color: isSelected
+              ? (isDark ? AppColors.darkEventTap : AppColors.eventTap)
+              : (isDark ? AppColors.darkSurface : AppColors.white),
           border: Border.all(
-            color: isSelected ? AppColors.teacherPrimary : AppColors.eventTap,
+            color: isSelected
+                ? AppColors.teacherPrimary
+                : (isDark ? AppColors.darkSurface : AppColors.eventTap),
             width: 1,
           ),
           borderRadius: BorderRadius.circular(8),
@@ -91,10 +101,10 @@ class _ReportCategoryItem extends StatelessWidget {
             Expanded(
               child: Text(
                 category.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
-                  color: AppColors.notesDarkText,
+                  color: isDark ? AppColors.darkText : AppColors.notesDarkText,
                 ),
               ),
             ),
@@ -102,16 +112,17 @@ class _ReportCategoryItem extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Text(
                 category.mockCount.toString(),
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Arial',
                   fontWeight: FontWeight.w400,
                   fontSize: 12,
-                  color: AppColors.notesDarkText,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.notesDarkText,
                 ),
               ),
             ),
             const SizedBox(width: 16),
-            // Радио-кнопка
             Container(
               width: 24,
               height: 24,
@@ -120,7 +131,9 @@ class _ReportCategoryItem extends StatelessWidget {
                 border: Border.all(
                   color: isSelected
                       ? AppColors.teacherPrimary
-                      : AppColors.directoryTextSecondary,
+                      : (isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.directoryTextSecondary),
                   width: 2,
                 ),
               ),
@@ -129,9 +142,11 @@ class _ReportCategoryItem extends StatelessWidget {
                       child: Container(
                         width: 10,
                         height: 10,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: AppColors.teacherPrimary,
+                          color: isDark
+                              ? AppColors.darkText
+                              : AppColors.teacherPrimary,
                         ),
                       ),
                     )

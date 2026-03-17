@@ -17,11 +17,17 @@ class StudentHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.eventTap, width: 1),
+        border: Border.all(
+          color: isDark ? AppColors.darkSurface : AppColors.eventTap,
+          width: 1,
+        ),
         borderRadius: BorderRadius.circular(8),
+        color: isDark ? AppColors.darkSurface : null,
       ),
       child: Row(
         children: [
@@ -33,7 +39,7 @@ class StudentHeader extends StatelessWidget {
               children: [
                 Text(
                   '${student.name} ${student.surname}',
-                  style: AppTextStyles.arial14W700.dark,
+                  style: AppTextStyles.arial14W700.themed(context),
                 ),
                 const SizedBox(height: 2),
                 Row(
@@ -42,12 +48,27 @@ class StudentHeader extends StatelessWidget {
                       'assets/images/energy_icon.png',
                       width: 16,
                       height: 16,
-                      color: AppColors.directoryTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.directoryTextSecondary,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Icon(
+                          Icons.bolt,
+                          size: 16,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.directoryTextSecondary,
+                        );
+                      },
                     ),
                     const SizedBox(width: 4),
                     Text(
                       '${student.score} баллов',
-                      style: AppTextStyles.arial12W400.grey, // 👈
+                      style: AppTextStyles.arial12W400.copyWith(
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.directoryTextSecondary,
+                      ),
                     ),
                   ],
                 ),
@@ -56,7 +77,11 @@ class StudentHeader extends StatelessWidget {
           ),
           IconButton(
             onPressed: onClose,
-            icon: Icon(Icons.close, size: 24, color: AppColors.teacherPrimary),
+            icon: Icon(
+              Icons.close,
+              size: 24,
+              color: isDark ? AppColors.darkText : AppColors.teacherPrimary,
+            ),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
           ),

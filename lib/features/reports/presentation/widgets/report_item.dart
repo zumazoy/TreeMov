@@ -9,41 +9,50 @@ class ReportItem extends StatelessWidget {
 
   const ReportItem({super.key, required this.report, this.onDownload});
 
-  Color _getStatusBgColor(ReportStatus status) {
-    switch (status) {
-      case ReportStatus.ready:
-        return AppColors.categoryStudyBg; // Зеленый для "Готов"
-      case ReportStatus.generating:
-        return AppColors.categoryGeneralBg; // Желтый для "Генерируется"
-      case ReportStatus.error:
-        return AppColors.categoryParentsBg; // Фиолетовый для "Ошибка"
-    }
-  }
-
-  Color _getStatusTextColor(ReportStatus status) {
-    switch (status) {
-      case ReportStatus.ready:
-        return AppColors.categoryStudyText;
-      case ReportStatus.generating:
-        return AppColors.categoryGeneralText;
-      case ReportStatus.error:
-        return AppColors.categoryParentsText;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final statusBg = _getStatusBgColor(report.status);
-    final statusText = _getStatusTextColor(report.status);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isReady = report.status == ReportStatus.ready;
+    Color statusBg;
+    Color statusText;
+
+    switch (report.status) {
+      case ReportStatus.ready:
+        statusBg = isDark
+            ? AppColors.darkCategoryStudyBg
+            : AppColors.categoryStudyBg;
+        statusText = isDark
+            ? AppColors.darkCategoryStudyText
+            : AppColors.categoryStudyText;
+        break;
+      case ReportStatus.generating:
+        statusBg = isDark
+            ? AppColors.darkCategoryGeneralBg
+            : AppColors.categoryGeneralBg;
+        statusText = isDark
+            ? AppColors.darkCategoryGeneralText
+            : AppColors.categoryGeneralText;
+        break;
+      case ReportStatus.error:
+        statusBg = isDark
+            ? AppColors.darkCategoryParentsBg
+            : AppColors.categoryParentsBg;
+        statusText = isDark
+            ? AppColors.darkCategoryParentsText
+            : AppColors.categoryParentsText;
+        break;
+    }
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 0,
-      color: AppColors.white,
+      color: isDark ? AppColors.darkCard : AppColors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(color: AppColors.eventTap, width: 1),
+        side: BorderSide(
+          color: isDark ? AppColors.darkSurface : AppColors.eventTap,
+          width: 1,
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -55,10 +64,12 @@ class ReportItem extends StatelessWidget {
                 Expanded(
                   child: Text(
                     report.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
-                      color: AppColors.grayFieldText,
+                      color: isDark
+                          ? AppColors.darkText
+                          : AppColors.grayFieldText,
                     ),
                   ),
                 ),
@@ -87,17 +98,21 @@ class ReportItem extends StatelessWidget {
             // Информация о периоде и обновлении
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.calendar_today_outlined,
                   size: 14,
-                  color: AppColors.directoryTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.directoryTextSecondary,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   report.period,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.directoryTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.directoryTextSecondary,
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -105,9 +120,11 @@ class ReportItem extends StatelessWidget {
                     report.status != ReportStatus.generating)
                   Text(
                     'Размер: ${report.size}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.directoryTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.directoryTextSecondary,
                     ),
                   ),
               ],
@@ -115,17 +132,21 @@ class ReportItem extends StatelessWidget {
             const SizedBox(height: 4),
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.watch_later_outlined,
                   size: 14,
-                  color: AppColors.directoryTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.directoryTextSecondary,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   'Обновлён: ${report.updateTime}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.directoryTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.directoryTextSecondary,
                   ),
                 ),
               ],
@@ -155,8 +176,8 @@ class ReportItem extends StatelessWidget {
                 ),
               ),
             ] else if (report.status == ReportStatus.generating)
-              const Padding(
-                padding: EdgeInsets.only(top: 16),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -165,15 +186,21 @@ class ReportItem extends StatelessWidget {
                       height: 16,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: AppColors.teacherPrimary,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          isDark
+                              ? AppColors.darkText
+                              : AppColors.teacherPrimary,
+                        ),
                       ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       'Генерируется',
                       style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.teacherPrimary,
+                        color: isDark
+                            ? AppColors.darkText
+                            : AppColors.teacherPrimary,
                       ),
                     ),
                   ],

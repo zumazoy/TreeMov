@@ -91,6 +91,7 @@ class _ReportFilterModalState extends State<ReportFilterModal> {
   }
 
   Future<void> _selectDate(bool isStart) async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final initialDate = isStart ? _startDate : _endDate;
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -99,10 +100,17 @@ class _ReportFilterModalState extends State<ReportFilterModal> {
       lastDate: DateTime(2100),
       builder: (context, child) {
         return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: const ColorScheme.light(
+          data: (isDark ? ThemeData.dark() : ThemeData.light()).copyWith(
+            colorScheme: ColorScheme(
+              brightness: isDark ? Brightness.dark : Brightness.light,
               primary: AppColors.teacherPrimary,
               onPrimary: AppColors.white,
+              secondary: AppColors.teacherPrimary,
+              onSecondary: AppColors.white,
+              error: Colors.red,
+              onError: Colors.white,
+              surface: isDark ? AppColors.darkSurface : AppColors.white,
+              onSurface: isDark ? AppColors.darkText : AppColors.notesDarkText,
             ),
           ),
           child: child!,
@@ -128,6 +136,8 @@ class _ReportFilterModalState extends State<ReportFilterModal> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: EdgeInsets.zero,
@@ -135,7 +145,7 @@ class _ReportFilterModalState extends State<ReportFilterModal> {
         width: 367,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: isDark ? AppColors.darkCard : AppColors.white,
           borderRadius: BorderRadius.circular(12.5),
         ),
         child: Column(
@@ -182,21 +192,26 @@ class _ReportFilterModalState extends State<ReportFilterModal> {
   }
 
   Widget _buildHeader() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
+        Text(
           'Фильтр отчетов',
           style: TextStyle(
             fontFamily: 'Arial',
             fontWeight: FontWeight.w700,
             fontSize: 20,
             height: 1.0,
-            color: AppColors.notesDarkText,
+            color: isDark ? AppColors.darkText : AppColors.notesDarkText,
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.close, color: AppColors.teacherPrimary),
+          icon: Icon(
+            Icons.close,
+            color: isDark ? AppColors.darkText : AppColors.teacherPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ],
@@ -204,17 +219,21 @@ class _ReportFilterModalState extends State<ReportFilterModal> {
   }
 
   Widget _buildPeriodSection() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Период:',
           style: TextStyle(
             fontFamily: 'Arial',
             fontWeight: FontWeight.w700,
             fontSize: 16,
             height: 1.0,
-            color: AppColors.directoryTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.directoryTextSecondary,
           ),
         ),
         const SizedBox(height: 12),
@@ -242,41 +261,48 @@ class _ReportFilterModalState extends State<ReportFilterModal> {
     DateTime? date,
     Function(DateTime?) onDateChanged,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () => _selectDate(label == 'от'),
       child: Container(
         height: 40,
         padding: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.eventTap),
+          color: isDark ? AppColors.darkCard : null,
+          border: Border.all(
+            color: isDark ? AppColors.darkSurface : AppColors.eventTap,
+          ),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
           children: [
             Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Arial',
                 fontWeight: FontWeight.w400,
                 fontSize: 14,
-                color: Colors.grey,
+                color: isDark ? AppColors.darkTextSecondary : Colors.grey,
               ),
             ),
             const Spacer(),
             Text(
               _formatDate(date),
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Arial',
                 fontWeight: FontWeight.w400,
                 fontSize: 14,
-                color: AppColors.notesDarkText,
+                color: isDark ? AppColors.darkText : AppColors.notesDarkText,
               ),
             ),
             const SizedBox(width: 8),
-            const Icon(
+            Icon(
               Icons.calendar_today,
               size: 16,
-              color: AppColors.grayFieldText,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.grayFieldText,
             ),
           ],
         ),
@@ -285,6 +311,8 @@ class _ReportFilterModalState extends State<ReportFilterModal> {
   }
 
   Widget _buildActionButtons() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -294,25 +322,32 @@ class _ReportFilterModalState extends State<ReportFilterModal> {
             child: OutlinedButton(
               onPressed: _clearAllFilters,
               style: OutlinedButton.styleFrom(
-                backgroundColor: AppColors.white,
-                foregroundColor: AppColors.teacherPrimary,
+                backgroundColor: isDark
+                    ? AppColors.darkSurface
+                    : AppColors.white,
+                foregroundColor: isDark
+                    ? AppColors.darkText
+                    : AppColors.teacherPrimary,
                 padding: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
-                  side: const BorderSide(
-                    color: AppColors.directoryBorder,
+                  side: BorderSide(
+                    color: isDark
+                        ? AppColors.darkSurface
+                        : AppColors.directoryBorder,
                     width: 1,
                   ),
                 ),
                 elevation: 0,
               ),
-              child: const Text(
+              child: Text(
                 'Очистить',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontWeight: FontWeight.w700,
                   fontSize: 14,
                   height: 1.0,
+                  color: isDark ? AppColors.darkText : null,
                 ),
               ),
             ),
