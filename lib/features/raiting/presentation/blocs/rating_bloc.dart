@@ -28,49 +28,39 @@ class RatingBloc extends Bloc<RatingEvent, RatingState> {
       _groups = await _repository.getStudentGroups();
 
       if (_groups.isEmpty) {
-        // Если групп нет, загружаем всех студентов
+        emit(const RatingEmpty('Упс, кажется тут нет групп'));
+        return;
+      }
+
+      _selectedGroup = _groups.first;
+
+      if (_selectedGroup!.id != null) {
+        final students = await _repository.getStudentsByGroup(
+          _selectedGroup!.id!,
+        );
+        final currentStudent = await _repository.getCurrentStudent();
+        emit(
+          StudentsLoaded(
+            students: students,
+            groups: _groups,
+            selectedGroup: _selectedGroup,
+            currentStudent: currentStudent,
+          ),
+        );
+      } else {
         final students = await _repository.getStudents();
         final currentStudent = await _repository.getCurrentStudent();
         emit(
           StudentsLoaded(
             students: students,
-            groups: [],
+            groups: _groups,
+            selectedGroup: _selectedGroup,
             currentStudent: currentStudent,
           ),
         );
-      } else {
-        // По умолчанию выбираем первую группу
-        _selectedGroup = _groups.first;
-        // Проверяем, что id не null
-        if (_selectedGroup!.id != null) {
-          final students = await _repository.getStudentsByGroup(
-            _selectedGroup!.id!,
-          );
-          final currentStudent = await _repository.getCurrentStudent();
-          emit(
-            StudentsLoaded(
-              students: students,
-              groups: _groups,
-              selectedGroup: _selectedGroup,
-              currentStudent: currentStudent,
-            ),
-          );
-        } else {
-          // Если id группы null, загружаем всех студентов
-          final students = await _repository.getStudents();
-          final currentStudent = await _repository.getCurrentStudent();
-          emit(
-            StudentsLoaded(
-              students: students,
-              groups: _groups,
-              selectedGroup: _selectedGroup,
-              currentStudent: currentStudent,
-            ),
-          );
-        }
       }
     } catch (e) {
-      emit(RatingError('Ошибка загрузки групп: $e'));
+      emit(const RatingError('Что-то пошло не так'));
     }
   }
 
@@ -80,7 +70,6 @@ class RatingBloc extends Bloc<RatingEvent, RatingState> {
   ) async {
     emit(RatingLoading());
     try {
-      // Проверяем, что id группы не null
       if (event.group.id != null) {
         final students = await _repository.getStudentsByGroup(event.group.id!);
         final currentStudent = await _repository.getCurrentStudent();
@@ -93,11 +82,10 @@ class RatingBloc extends Bloc<RatingEvent, RatingState> {
           ),
         );
       } else {
-        // Если id группы null, показываем ошибку
-        emit(RatingError('ID группы не может быть null'));
+        emit(const RatingError('Что-то пошло не так'));
       }
     } catch (e) {
-      emit(RatingError('Ошибка загрузки студентов: $e'));
+      emit(const RatingError('Что-то пошло не так'));
     }
   }
 
@@ -120,7 +108,7 @@ class RatingBloc extends Bloc<RatingEvent, RatingState> {
         );
       }
     } catch (e) {
-      // Игнорируем ошибку загрузки текущего студента
+      // Игнорируем ошибку
     }
   }
 

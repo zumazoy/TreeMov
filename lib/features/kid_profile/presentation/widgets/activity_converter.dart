@@ -9,6 +9,16 @@ class ActivityConverter {
     String iconPath;
     String title;
 
+    DateTime? createdAt;
+    if (accrual.createdAt != null) {
+      try {
+        createdAt = DateTime.parse(accrual.createdAt!);
+        debugPrint('   Дата начисления: $createdAt');
+      } catch (e) {
+        debugPrint('   Ошибка парсинга даты: $e');
+      }
+    }
+
     String category = accrual.category ?? 'Активность';
     debugPrint('   Категория: $category, комментарий: ${accrual.comment}');
     switch (category.toLowerCase()) {
@@ -49,6 +59,7 @@ class ActivityConverter {
       title: title,
       points: accrual.amount ?? 0,
       iconPath: iconPath,
+      createdAt: createdAt,
     );
   }
 }

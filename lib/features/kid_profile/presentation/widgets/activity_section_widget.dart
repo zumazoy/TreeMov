@@ -145,6 +145,7 @@ class ActivitySectionWidget extends StatelessWidget {
                 iconPath: activity.iconPath,
                 circleColor: _getCircleColor(activity.title),
                 iconColor: _getIconColor(activity.title),
+                createdAt: activity.createdAt,
               );
             },
           ),

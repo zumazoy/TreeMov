@@ -78,9 +78,26 @@ class StudentProfileBloc
       debugPrint(
         '📊 Отфильтровано для ученика $studentId: ${filteredActivities.length}',
       );
-      final lastTenActivities = filteredActivities.take(10).toList();
 
-      debugPrint('📊 Показываем последние 10: ${lastTenActivities.length}');
+      final sortedActivities =
+          List<AccrualResponseModel>.from(filteredActivities)..sort((a, b) {
+            if (a.createdAt == null && b.createdAt == null) return 0;
+            if (a.createdAt == null) return 1;
+            if (b.createdAt == null) return -1;
+
+            return b.createdAt!.compareTo(a.createdAt!);
+          });
+
+      final lastTenActivities = sortedActivities.take(10).toList();
+
+      if (lastTenActivities.isNotEmpty) {
+        debugPrint('📊 Показываем последние 10 начислений:');
+        debugPrint('   Самое новое: ${lastTenActivities.first.createdAt}');
+        debugPrint('   Самое старое: ${lastTenActivities.last.createdAt}');
+      } else {
+        debugPrint('📊 Нет начислений для отображения');
+      }
+
       emit(
         state.copyWith(
           activities: lastTenActivities,

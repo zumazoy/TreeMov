@@ -51,65 +51,17 @@ class _RatingScreenState extends State<RatingScreen> {
           if (state is StudentsLoaded) {
             return _buildContent(state);
           } else if (state is RatingError) {
-            return _buildErrorContent();
+            return RatingErrorWidget(onRefresh: _loadData);
+          } else if (state is RatingEmpty) {
+            return RatingEmptyWidget(
+              message: state.message,
+              onRefresh: _loadData,
+            );
           } else if (state is RatingLoading) {
             return const RatingLoadingWidget();
           }
           return const RatingLoadingWidget();
         },
-      ),
-    );
-  }
-
-  Widget _buildErrorContent() {
-    return Scaffold(
-      backgroundColor: AppColors.skyBlue,
-      body: RatingBackground(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.sentiment_dissatisfied_outlined,
-                size: 64,
-                color: Colors.white70,
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Ой, кажется что-то пошло не так',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Попробуйте обновить экран',
-                style: TextStyle(
-                  color: Colors.white.withAlpha(179),
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _loadData,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: AppColors.achievementDeepBlue,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

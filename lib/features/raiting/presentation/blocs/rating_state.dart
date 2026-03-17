@@ -9,6 +9,12 @@ class RatingInitial extends RatingState {}
 
 class RatingLoading extends RatingState {}
 
+class RatingEmpty extends RatingState {
+  final String message;
+
+  const RatingEmpty(this.message);
+}
+
 class StudentGroupsLoaded extends RatingState {
   final List<GroupStudentsResponseModel> groups;
   final GroupStudentsResponseModel? selectedGroup;
