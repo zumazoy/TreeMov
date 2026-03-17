@@ -25,6 +25,10 @@ import 'package:treemov/features/organizations/data/datasources/orgs_remote_data
 import 'package:treemov/features/organizations/data/repositories/orgs_repository_impl.dart';
 import 'package:treemov/features/organizations/domain/repositories/orgs_repository.dart';
 import 'package:treemov/features/organizations/presentation/bloc/orgs_bloc.dart';
+import 'package:treemov/features/raiting/data/datasource/rating_remote_data_source.dart';
+import 'package:treemov/features/raiting/data/repositories/rating_repository_impl.dart';
+import 'package:treemov/features/raiting/domain/repositories/rating_repository.dart';
+import 'package:treemov/features/raiting/presentation/blocs/rating_bloc.dart';
 import 'package:treemov/features/registration/data/datasources/register_remote_data_source.dart';
 import 'package:treemov/features/registration/data/repositories/register_repository_impl.dart';
 import 'package:treemov/features/registration/domain/repositories/register_repository.dart';
@@ -76,9 +80,6 @@ void setupDependencies() {
   getIt.registerSingleton<AccrualRemoteDataSource>(
     AccrualRemoteDataSource(getIt<DioClient>()),
   );
-  // getIt.registerSingleton<TeacherNotesRemoteDataSource>(
-  //   TeacherNotesRemoteDataSource(getIt<DioClient>()),
-  // );
   getIt.registerSingleton<RegisterRemoteDataSource>(
     RegisterRemoteDataSourceImpl(getIt<DioClient>()),
   );
@@ -90,6 +91,12 @@ void setupDependencies() {
       getIt<DioClient>(),
       getIt<SecureStorageRepository>(),
     ),
+  );
+  // getIt.registerSingleton<TeacherNotesRemoteDataSource>(
+  //   TeacherNotesRemoteDataSource(getIt<DioClient>()),
+  // );
+  getIt.registerSingleton<RatingRemoteDataSource>(
+    RatingRemoteDataSource(getIt<DioClient>()),
   );
 
   // Репозитории
@@ -105,9 +112,6 @@ void setupDependencies() {
   getIt.registerSingleton<AccrualRepository>(
     AccrualRepositoryImpl(getIt<AccrualRemoteDataSource>()),
   );
-  // getIt.registerSingleton<TeacherNotesRepository>(
-  //   TeacherNotesRepositoryImpl(getIt<TeacherNotesRemoteDataSource>()),
-  // );
   getIt.registerSingleton<LocalNotesRepository>(
     LocalNotesRepositoryImpl(getIt<LocalNotesDataSource>()),
   );
@@ -119,6 +123,12 @@ void setupDependencies() {
   );
   getIt.registerSingleton<StudentProfileRepository>(
     StudentProfileRepositoryImpl(getIt<StudentProfileRemoteDataSource>()),
+  );
+  // getIt.registerSingleton<TeacherNotesRepository>(
+  //   TeacherNotesRepositoryImpl(getIt<TeacherNotesRemoteDataSource>()),
+  // );
+  getIt.registerSingleton<RatingRepository>(
+    RatingRepositoryImpl(getIt<RatingRemoteDataSource>()),
   );
 
   // BLoC
@@ -133,14 +143,12 @@ void setupDependencies() {
   getIt.registerFactory<DirectoryBloc>(
     () => DirectoryBloc(getIt<SharedRepository>()),
   );
-
   // getIt.registerFactory<NotesBloc>(
   //   () => NotesBloc(
   //     getIt<TeacherNotesRepository>(),
   //     getIt<LocalNotesRepository>(),
   //   ),
   // );
-
   getIt.registerFactory<AccrualBloc>(
     () => AccrualBloc(getIt<SharedRepository>(), getIt<AccrualRepository>()),
   );
@@ -158,6 +166,10 @@ void setupDependencies() {
   );
 
   getIt.registerFactory<OrgsBloc>(() => OrgsBloc(getIt<OrgsRepository>()));
+
+  getIt.registerFactory<RatingBloc>(
+    () => RatingBloc(getIt<RatingRepository>()),
+  );
 
   // Тема
   getIt.registerSingleton<ThemeCubit>(ThemeCubit(getIt<SettingsService>()));

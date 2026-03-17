@@ -14,26 +14,28 @@ class StudentProfileRemoteDataSource extends BaseRemoteDataSource {
 
   Future<StudentResponseModel> getStudentProfile() async {
     final orgMemberId = await _secureStorageRepository.getOrgMemberId();
-    final queryParams = <String, dynamic>{};
-    if (orgMemberId != null) {
-      queryParams['org_member'] = orgMemberId;
+
+    if (orgMemberId == null) {
+      throw Exception('ID организации не найден');
     }
 
-    final students = await getList(
-      path: ApiConstants.students,
-      fromJson: StudentResponseModel.fromJson,
-      queryParameters: queryParams,
-    );
+    final queryParams = <String, dynamic>{'org_member_id': orgMemberId};
 
-    if (orgMemberId != null && students.isNotEmpty) {
-      final student = students.firstWhere(
-        (s) => s.orgMember?.id.toString() == orgMemberId.toString(),
-        orElse: () => students.first,
+    try {
+      final students = await getList(
+        path: ApiConstants.students,
+        fromJson: StudentResponseModel.fromJson,
+        queryParameters: queryParams,
       );
-      return student;
-    }
 
-    return students.first;
+      if (students.isEmpty) {
+        throw Exception('Студент с org_member_id $orgMemberId не найден');
+      }
+
+      return students.first;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<List<AccrualResponseModel>> getStudentAccruals({

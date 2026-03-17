@@ -17,9 +17,9 @@ class ApiConstants {
   static const String verifyEmail = 'verify';
 
   // Main
-  static const String myInvites = 'invites/me';
+  static const String invites = 'invites';
   static const String acceptInvite = 'invites/accept';
-  static const String myOrgs = 'organizations/me';
+  static const String orgs = 'organizations';
   static const String students = 'students';
   static const String teachers = 'teachers';
   static const String classrooms = 'classrooms';
@@ -31,6 +31,9 @@ class ApiConstants {
   static const String attendances = 'attendances';
   static const String accruals = 'accruals';
   static const String teacherNotes = 'teacher-notes';
+
+  //
+  static const String me = '/me';
 
   // Endpoints requiring org-id header
   static const List<String> endpointsRequiringOrgMemberId = [
@@ -52,9 +55,9 @@ class ApiConstants {
     login,
     refresh,
     logout,
-    myInvites,
+    invites,
     acceptInvite,
-    myOrgs,
+    orgs,
   ];
 
   // Endpoints not requiring token

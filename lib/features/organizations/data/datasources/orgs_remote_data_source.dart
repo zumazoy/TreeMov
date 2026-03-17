@@ -8,14 +8,14 @@ class OrgsRemoteDataSource extends BaseRemoteDataSource {
 
   Future<List<OrgMemberResponseModel>> getMyOrgs() {
     return getList(
-      path: ApiConstants.myOrgs,
+      path: ApiConstants.orgs + ApiConstants.me,
       fromJson: OrgMemberResponseModel.fromJson,
     );
   }
 
   Future<List<InviteResponseModel>> getMyInvites() {
     return getList(
-      path: ApiConstants.myInvites,
+      path: ApiConstants.invites + ApiConstants.me,
       fromJson: InviteResponseModel.fromJson,
       queryParameters: {'status': 'sending'},
     );
