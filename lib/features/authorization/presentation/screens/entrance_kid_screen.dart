@@ -8,6 +8,8 @@ import 'package:treemov/core/themes/app_text_styles.dart';
 import 'package:treemov/core/widgets/auth/auth_header.dart';
 import 'package:treemov/features/authorization/domain/repositories/auth_repository.dart';
 import 'package:treemov/features/authorization/presentation/bloc/login_bloc.dart';
+import 'package:treemov/shared/presentation/widgets/app_primary_button.dart';
+import 'package:treemov/shared/presentation/widgets/app_text_field.dart';
 
 class EntranceKidScreen extends StatefulWidget {
   const EntranceKidScreen({super.key});
@@ -20,11 +22,6 @@ class _EntranceKidScreenState extends State<EntranceKidScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -51,9 +48,32 @@ class _EntranceKidScreenState extends State<EntranceKidScreen> {
                     const SizedBox(height: 60),
                     Text('Вход', style: AppTextStyles.ttNorms24W900.white),
                     const SizedBox(height: 40),
-                    _buildTextField('Email', _emailController),
+                    AppTextField(
+                      controller: _emailController,
+                      hintText: 'Email',
+                      fillColor: AppColors.white,
+                      keyboardType: TextInputType.emailAddress,
+                    ),
                     const SizedBox(height: 20),
-                    _buildPasswordField('Пароль', _passwordController),
+                    AppTextField(
+                      controller: _passwordController,
+                      hintText: 'Пароль',
+                      obscureText: _obscurePassword,
+                      fillColor: AppColors.white,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: AppColors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     BlocProvider(
                       create: (context) => LoginBloc(
@@ -82,73 +102,6 @@ class _EntranceKidScreenState extends State<EntranceKidScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTextField(String hintText, TextEditingController controller) {
-    return Container(
-      width: 316,
-      height: 44,
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 12,
-          ),
-          hintText: hintText,
-          hintStyle: AppTextStyles.ttNorms16W400.copyWith(
-            color: AppColors.grey,
-          ), // 👈
-        ),
-        style: AppTextStyles.ttNorms16W400,
-      ),
-    );
-  }
-
-  Widget _buildPasswordField(
-    String hintText,
-    TextEditingController controller,
-  ) {
-    return Container(
-      width: 316,
-      height: 44,
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: TextField(
-        controller: controller,
-        obscureText: _obscurePassword,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 12,
-          ),
-          hintText: hintText,
-          hintStyle: AppTextStyles.ttNorms16W400.copyWith(
-            color: AppColors.grey,
-          ),
-          suffixIcon: IconButton(
-            icon: Icon(
-              _obscurePassword ? Icons.visibility_off : Icons.visibility,
-              color: AppColors.grey,
-            ),
-            onPressed: () {
-              setState(() {
-                _obscurePassword = !_obscurePassword;
-              });
-            },
-          ),
-        ),
-        style: AppTextStyles.ttNorms16W400,
       ),
     );
   }
@@ -201,31 +154,15 @@ class _LoginButton extends StatelessWidget {
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
           return SizedBox(
-            width: 316,
+            width: double.infinity,
             height: 44,
-            child: ElevatedButton(
+            child: AppPrimaryButton(
+              text: 'Войти',
               onPressed: state is LoginLoading
                   ? null
                   : () => _handleLogin(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.kidButton,
-                foregroundColor: AppColors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 0,
-                shadowColor: Colors.transparent,
-              ),
-              child: state is LoginLoading
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.white,
-                      ),
-                    )
-                  : Text('Войти', style: AppTextStyles.ttNorms18W700.white),
+              isLoading: state is LoginLoading,
+              backgroundColor: AppColors.kidButton,
             ),
           );
         },

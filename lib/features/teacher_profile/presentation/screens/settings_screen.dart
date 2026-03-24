@@ -36,16 +36,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context); // 👈 ПОЛУЧАЕМ ТЕМУ
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor, // 👈 ИСПРАВЛЕНО
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
           'Настройки',
-          style: AppTextStyles.ttNorms20W900.themed(context), // 👈 ИСПРАВЛЕНО
+          style: AppTextStyles.ttNorms20W900.themed(context),
         ),
-        backgroundColor: theme.appBarTheme.backgroundColor, // 👈 ИСПРАВЛЕНО
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
       ),
       body: ListView(
@@ -74,13 +74,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (context, themeMode) {
               final themeCubit = context.read<ThemeCubit>();
-              print('🎨 Текущая тема в билдере: $themeMode');
 
               return SettingsAppearanceSection(
                 darkModeEnabled: themeMode == ThemeMode.dark,
                 showPhotosInLists: _showPhotosInLists,
                 onDarkModeChanged: (v) {
-                  print('🔄 Переключение темы на: $v');
                   themeCubit.setTheme(v);
                 },
                 onShowPhotosChanged: (v) =>
@@ -115,21 +113,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onPressed: () => LogoutDialog.show(context: context),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
-                side: BorderSide(
-                  color: theme
-                      .colorScheme
-                      .error, // 👈 ИСПРАВЛЕНО (красный из темы)
-                  width: 1,
-                ),
+                side: BorderSide(color: theme.colorScheme.error, width: 1),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                foregroundColor: theme.colorScheme.error, // 👈 ИСПРАВЛЕНО
+                foregroundColor: theme.colorScheme.error,
               ),
               child: Text(
                 'Выйти из аккаунта',
                 style: AppTextStyles.ttNorms16W600.withColor(
-                  theme.colorScheme.error, // 👈 ИСПРАВЛЕНО
+                  theme.colorScheme.error,
                 ),
               ),
             ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../../../core/themes/app_colors.dart';
+import 'package:treemov/core/themes/app_text_styles.dart';
 
 class AuthHeader extends StatefulWidget {
   const AuthHeader({super.key});
@@ -36,33 +35,35 @@ class _AuthHeaderState extends State<AuthHeader> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    if (_isKeyboardVisible) {
-      return const SizedBox.shrink();
-    }
+    if (_isKeyboardVisible) return const SizedBox.shrink();
+
+    final screenSize = MediaQuery.of(context).size;
+    final safeTop = MediaQuery.of(context).padding.top;
+
+    const logoContentHeight = 80.0;
+    const minSpacing = 40.0;
+
+    final maxTop = screenSize.height * 0.5 - logoContentHeight - minSpacing;
+    final topPosition = (screenSize.height * 0.15).clamp(0.0, maxTop);
 
     return Positioned(
-      top: 140,
-      left: 171,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset(
-            'assets/images/white_default_logo.png',
-            width: 60,
-            height: 58,
-            fit: BoxFit.contain,
-          ),
-          const SizedBox(height: 2),
-          const Text(
-            'TreeMov',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w900,
-              color: AppColors.white,
-              fontFamily: 'TT Norms',
+      top: topPosition + safeTop,
+      left: 0,
+      right: 0,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              'assets/images/white_default_logo.png',
+              width: 60,
+              height: 58,
+              fit: BoxFit.contain,
             ),
-          ),
-        ],
+            const SizedBox(height: 2),
+            Text('TreeMov', style: AppTextStyles.ttNorms16W900.white),
+          ],
+        ),
       ),
     );
   }

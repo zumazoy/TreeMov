@@ -89,11 +89,16 @@ class _DirectoryScreenState extends State<_DirectoryScreenContent> {
         return Scaffold(
           backgroundColor: theme.scaffoldBackgroundColor,
           appBar: AppBar(
-            title: const AppBarTitle(text: 'Ученики'),
+            title: const AppBarTitle(
+              text: 'Ученики',
+              iconPath: 'assets/images/group_icon.png',
+            ),
             backgroundColor: theme.scaffoldBackgroundColor,
             foregroundColor: isDark
                 ? AppColors.darkText
                 : AppColors.grayFieldText,
+            centerTitle: false,
+            titleSpacing: 0,
             elevation: 0,
           ),
           body: Column(
