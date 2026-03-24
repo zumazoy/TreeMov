@@ -4,8 +4,6 @@ import 'package:treemov/shared/data/models/accrual_response_model.dart';
 
 class ActivityConverter {
   static ActivityItemData fromAccrual(AccrualResponseModel accrual) {
-    debugPrint('🔄 Конвертация начисления ID: ${accrual.id}');
-
     String iconPath;
     String title;
 
@@ -13,14 +11,12 @@ class ActivityConverter {
     if (accrual.createdAt != null) {
       try {
         createdAt = DateTime.parse(accrual.createdAt!);
-        debugPrint('   Дата начисления: $createdAt');
       } catch (e) {
         debugPrint('   Ошибка парсинга даты: $e');
       }
     }
 
     String category = accrual.category ?? 'Активность';
-    debugPrint('   Категория: $category, комментарий: ${accrual.comment}');
     switch (category.toLowerCase()) {
       case 'attendance':
       case 'presence':
@@ -52,8 +48,6 @@ class ActivityConverter {
         iconPath = 'assets/images/energy_icon.png';
         title = accrual.comment ?? 'Активность';
     }
-
-    debugPrint('   → Результат: $title, ${accrual.amount} баллов');
 
     return ActivityItemData(
       title: title,

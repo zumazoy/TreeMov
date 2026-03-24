@@ -14,10 +14,12 @@ class KidCalendarBloc extends Bloc<KidCalendarEvent, KidCalendarState> {
   List<LessonEntity> _cachedLessons = [];
   DateTime? _cachedDateMin;
   DateTime? _cachedDateMax;
+  DateTime? _cachedTimestamp;
 
   bool _isLoading = false;
 
   DateTime _currentDisplayDate = DateTime.now();
+  static const Duration _cacheDuration = Duration(seconds: 30);
 
   KidCalendarBloc({required KidCalendarRepository repository})
     : _repository = repository,
@@ -27,6 +29,10 @@ class KidCalendarBloc extends Bloc<KidCalendarEvent, KidCalendarState> {
     on<SelectDayEvent>(_onSelectDay);
     on<ClosePanelEvent>(_onClosePanel);
   }
+  bool _isCacheValid() {
+    if (_cachedTimestamp == null) return false;
+    return DateTime.now().difference(_cachedTimestamp!) < _cacheDuration;
+  }
 
   Future<void> _onLoadLessons(
     LoadKidLessonsEvent event,
@@ -35,8 +41,9 @@ class KidCalendarBloc extends Bloc<KidCalendarEvent, KidCalendarState> {
     final requestedMin = DateTime.parse(event.dateMin);
     final requestedMax = DateTime.parse(event.dateMax);
 
-    if (_isLoading || _isRangeCached(requestedMin, requestedMax)) {
-      if (_isRangeCached(requestedMin, requestedMax)) {
+    if (_isLoading ||
+        (_isCacheValid() && _isRangeCached(requestedMin, requestedMax))) {
+      if (_isCacheValid() && _isRangeCached(requestedMin, requestedMax)) {
         _emitLoadedState(emit, _currentDisplayDate);
       }
       return;
@@ -52,7 +59,7 @@ class KidCalendarBloc extends Bloc<KidCalendarEvent, KidCalendarState> {
       );
       final expandedMax = DateTime(
         requestedMax.year,
-        requestedMax.month + 3,
+        requestedMax.month + 2,
         0,
       );
 
@@ -64,6 +71,7 @@ class KidCalendarBloc extends Bloc<KidCalendarEvent, KidCalendarState> {
       _cachedLessons = lessons;
       _cachedDateMin = expandedMin;
       _cachedDateMax = expandedMax;
+      _cachedTimestamp = DateTime.now();
 
       _emitLoadedState(emit, _currentDisplayDate);
     } catch (e) {

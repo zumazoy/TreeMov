@@ -34,7 +34,7 @@ class CalendarKidScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final dateMin = _getFirstDayOfMonth(DateTime(now.year, now.month - 2));
-    final dateMax = _getLastDayOfMonth(DateTime(now.year, now.month + 3));
+    final dateMax = _getLastDayOfMonth(DateTime(now.year, now.month + 2));
 
     return BlocProvider(
       create: (context) {
@@ -234,7 +234,7 @@ class _CalendarKidScreenContentState extends State<_CalendarKidScreenContent>
                               DateTime(now.year, now.month - 2),
                             );
                             final dateMax = _getLastDayOfMonth(
-                              DateTime(now.year, now.month + 3),
+                              DateTime(now.year, now.month + 2),
                             );
 
                             context.read<KidCalendarBloc>().add(
