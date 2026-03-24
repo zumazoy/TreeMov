@@ -45,6 +45,7 @@ class AppTextStyles {
   static TextStyle get ttNorms16W600 => ttNorms(16, FontWeight.w600);
   static TextStyle get ttNorms16W500 => ttNorms(16, FontWeight.w500);
   static TextStyle get ttNorms16W400 => ttNorms(16, FontWeight.w400);
+  static TextStyle get ttNorms16W900 => ttNorms(16, FontWeight.w900);
 
   static TextStyle get ttNorms14W900 => ttNorms(14, FontWeight.w900);
   static TextStyle get ttNorms14W700 => ttNorms(14, FontWeight.w700);

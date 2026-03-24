@@ -74,7 +74,7 @@ class _ProfileScreenContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context); // 👈 ПОЛУЧАЕМ ТЕМУ
+    final theme = Theme.of(context);
 
     return BlocBuilder<TeacherProfileBloc, TeacherProfileState>(
       builder: (context, state) {
@@ -88,7 +88,7 @@ class _ProfileScreenContent extends StatelessWidget {
         // Обработка ошибки профиля (если нет данных профиля)
         if (state.profileError != null && state.teacherProfile == null) {
           return Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor, // 👈 ИСПРАВЛЕНО
+            backgroundColor: theme.scaffoldBackgroundColor,
             appBar: _buildAppBar(context, null),
             body: Center(
               child: Column(
@@ -96,9 +96,7 @@ class _ProfileScreenContent extends StatelessWidget {
                 children: [
                   Text(
                     'Ошибка: ${state.profileError}',
-                    style: TextStyle(
-                      color: theme.colorScheme.error,
-                    ), // 👈 ИСПРАВЛЕНО
+                    style: TextStyle(color: theme.colorScheme.error),
                   ),
                   ElevatedButton(
                     onPressed: () => context.read<TeacherProfileBloc>().add(
@@ -114,24 +112,21 @@ class _ProfileScreenContent extends StatelessWidget {
 
         // Если есть данные профиля, показываем экран
         return Scaffold(
-          backgroundColor: theme.scaffoldBackgroundColor, // 👈 ИСПРАВЛЕНО
+          backgroundColor: theme.scaffoldBackgroundColor,
           appBar: _buildAppBar(context, state.teacherProfile),
           body: Column(
             children: [
               if (state.teacherProfile != null)
                 ProfileHeader(orgMember: state.teacherProfile!),
 
-              Container(
-                height: 1,
-                color: theme.dividerColor, // 👈 ИСПРАВЛЕНО
-              ),
+              Container(height: 1, color: theme.dividerColor),
               const SizedBox(height: 15),
 
               Expanded(child: _buildLessonsContent(context, state)),
 
               Container(
                 padding: const EdgeInsets.all(16),
-                color: theme.scaffoldBackgroundColor, // 👈 ИСПРАВЛЕНО
+                color: theme.scaffoldBackgroundColor,
                 child: RepNotsButtons(),
               ),
             ],
@@ -145,10 +140,10 @@ class _ProfileScreenContent extends StatelessWidget {
     BuildContext context,
     OrgMemberResponseModel? teacherProfile,
   ) {
-    final theme = Theme.of(context); // 👈 ПОЛУЧАЕМ ТЕМУ
+    final theme = Theme.of(context);
 
     return AppBar(
-      backgroundColor: theme.appBarTheme.backgroundColor, // 👈 ИСПРАВЛЕНО
+      backgroundColor: theme.appBarTheme.backgroundColor,
       elevation: 0,
       title: Image.asset(
         'assets/images/grad_logo.png',
@@ -162,7 +157,7 @@ class _ProfileScreenContent extends StatelessWidget {
             'assets/images/gear_icon.png',
             width: 20,
             height: 20,
-            color: theme.iconTheme.color, // 👈 ИСПРАВЛЕНО
+            color: theme.iconTheme.color,
           ),
           onPressed: () => {
             // if (teacherProfile != null)
@@ -181,7 +176,7 @@ class _ProfileScreenContent extends StatelessWidget {
   }
 
   Widget _buildLessonsContent(BuildContext context, TeacherProfileState state) {
-    final theme = Theme.of(context); // 👈 ПОЛУЧАЕМ ТЕМУ
+    final theme = Theme.of(context);
 
     // Загрузка уроков
     if (state.isLoadingLessons) {
@@ -199,7 +194,7 @@ class _ProfileScreenContent extends StatelessWidget {
           children: [
             Text(
               'Ошибка загрузки расписания: ${state.lessonsError}',
-              style: TextStyle(color: theme.colorScheme.error), // 👈 ИСПРАВЛЕНО
+              style: TextStyle(color: theme.colorScheme.error),
             ),
             ElevatedButton(
               onPressed: () => context.read<TeacherProfileBloc>().add(

@@ -28,10 +28,12 @@ class ProfileHeader extends StatelessWidget {
       color: theme.cardColor,
       padding: const EdgeInsets.only(left: 16, right: 16, bottom: 20),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             width: 80,
             height: 80,
+            margin: const EdgeInsets.only(top: 8),
             decoration: BoxDecoration(
               border: Border.all(
                 color: theme.colorScheme.primary.withAlpha(128),
@@ -52,20 +54,23 @@ class ProfileHeader extends StatelessWidget {
           const SizedBox(width: 16),
 
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _getFullName(),
-                  style: AppTextStyles.arial18W700.themed(context),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  ' ', // teacherProfile.teacher?.employee.email ??
-                  //     'Заглушка должности',
-                  style: AppTextStyles.arial14W400.grey,
-                ),
-              ],
+            child: Container(
+              margin: const EdgeInsets.only(top: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _getFullName(),
+                    style: AppTextStyles.arial18W700.themed(context),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    ' ', // teacherProfile.teacher?.employee.email ??
+                    //     'Заглушка должности',
+                    style: AppTextStyles.arial14W400.grey,
+                  ),
+                ],
+              ),
             ),
           ),
         ],

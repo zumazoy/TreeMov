@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/themes/app_colors.dart';
+import '../../../../../core/themes/app_text_styles.dart';
 import '../../utils/calendar_utils.dart';
 
 class CalendarHeader extends StatelessWidget {
@@ -16,22 +18,20 @@ class CalendarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Container(
       width: 327,
       height: 48,
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary,
+        color: AppColors.teacherPrimary,
         borderRadius: BorderRadius.circular(12.5),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.chevron_left,
-              color: theme.colorScheme.onPrimary,
+              color: AppColors.white,
               size: 24,
             ),
             onPressed: onPrevMonth,
@@ -39,19 +39,13 @@ class CalendarHeader extends StatelessWidget {
           Center(
             child: Text(
               CalendarUtils.getMonthYearText(currentDate),
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onPrimary,
-                fontFamily: 'Arial',
-                height: 1.0,
-              ),
+              style: AppTextStyles.ttNorms20W700.white,
             ),
           ),
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.chevron_right,
-              color: theme.colorScheme.onPrimary,
+              color: AppColors.white,
               size: 24,
             ),
             onPressed: onNextMonth,

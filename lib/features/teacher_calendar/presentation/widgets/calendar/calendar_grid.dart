@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/themes/app_colors.dart';
+import '../../../../../core/themes/app_text_styles.dart';
 import '../../utils/calendar_utils.dart';
 
 class CalendarGrid extends StatelessWidget {
@@ -18,10 +20,14 @@ class CalendarGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final List<DateTime?> calendarDays = CalendarUtils.generateMonthDays(
       currentDate,
     );
+
+    final primaryColor = AppColors.teacherPrimary;
+    final textColor = isDark ? AppColors.darkText : AppColors.notesDarkText;
+    final selectedBgColor = primaryColor.withAlpha(51);
 
     return SizedBox(
       width: 327,
@@ -52,25 +58,17 @@ class CalendarGrid extends StatelessWidget {
               margin: const EdgeInsets.all(2),
               decoration: BoxDecoration(
                 border: isToday
-                    ? Border.all(color: theme.colorScheme.primary, width: 1)
+                    ? Border.all(color: primaryColor, width: 1)
                     : null,
                 borderRadius: BorderRadius.circular(8),
-                color: isSelected
-                    ? theme.colorScheme.primary.withAlpha(51)
-                    : Colors.transparent,
+                color: isSelected ? selectedBgColor : Colors.transparent,
               ),
               child: Stack(
                 children: [
                   Center(
                     child: Text(
                       day.day.toString(),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Arial',
-                        height: 1.0,
-                        color: theme.textTheme.bodyLarge?.color,
-                      ),
+                      style: AppTextStyles.ttNorms20W700.withColor(textColor),
                     ),
                   ),
                   if (hasEvents)
@@ -83,7 +81,7 @@ class CalendarGrid extends StatelessWidget {
                           width: 7,
                           height: 7,
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary,
+                            color: primaryColor,
                             shape: BoxShape.circle,
                           ),
                         ),

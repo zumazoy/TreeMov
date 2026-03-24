@@ -8,6 +8,8 @@ import 'package:treemov/core/themes/app_text_styles.dart';
 import 'package:treemov/core/widgets/auth/auth_header.dart';
 import 'package:treemov/features/authorization/domain/repositories/auth_repository.dart';
 import 'package:treemov/features/authorization/presentation/bloc/login_bloc.dart';
+import 'package:treemov/shared/presentation/widgets/app_primary_button.dart';
+import 'package:treemov/shared/presentation/widgets/app_text_field.dart';
 
 class EntranceTeacherScreen extends StatelessWidget {
   const EntranceTeacherScreen({super.key});
@@ -20,14 +22,12 @@ class EntranceTeacherScreen extends StatelessWidget {
       child: BlocListener<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            // Успешная авторизация
             Navigator.pushNamedAndRemoveUntil(
               context,
               AppRoutes.mainApp,
               (route) => false,
             );
           } else if (state is LoginError) {
-            // Показ ошибки авторизации
             _showErrorDialog(context, state.error);
           }
         },
@@ -83,7 +83,6 @@ class _EntranceTeacherContent extends StatefulWidget {
 class _EntranceTeacherContentState extends State<_EntranceTeacherContent> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isLoading = false;
   bool _obscurePassword = true;
 
   @override
@@ -101,8 +100,6 @@ class _EntranceTeacherContentState extends State<_EntranceTeacherContent> {
       _showValidationError();
       return;
     }
-
-    setState(() => _isLoading = true);
 
     context.read<LoginBloc>().add(
       LoginSubmitted(email: email, password: password),
@@ -124,146 +121,70 @@ class _EntranceTeacherContentState extends State<_EntranceTeacherContent> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state is LoginLoading) {
-          setState(() => _isLoading = true);
-        } else if (state is LoginError || state is LoginSuccess) {
-          setState(() => _isLoading = false);
-        }
-      },
-      child: Scaffold(
-        backgroundColor: AppColors.teacherPrimary,
-        body: Stack(
-          children: [
-            const AuthHeader(),
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        final isLoading = state is LoginLoading;
 
-            Center(
-              child: SingleChildScrollView(
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 60),
-
-                      Text('Вход', style: AppTextStyles.ttNorms24W900.white),
-                      const SizedBox(height: 40),
-
-                      _buildTextField(_emailController, 'email'),
-                      const SizedBox(height: 20),
-
-                      _buildPasswordField(_passwordController, 'Пароль'),
-                      const SizedBox(height: 20),
-
-                      SizedBox(
-                        width: 316,
-                        height: 44,
-                        child: ElevatedButton(
-                          onPressed: _isLoading ? null : _login,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.teacherButton,
-                            foregroundColor: AppColors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            elevation: 0,
-                            shadowColor: Colors.transparent,
-                          ),
-                          child: _isLoading
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.white,
-                                    ),
-                                  ),
-                                )
-                              : Text(
-                                  'Войти',
-                                  style: AppTextStyles.ttNorms18W700.white,
-                                ),
+        return Scaffold(
+          backgroundColor: AppColors.teacherPrimary,
+          body: Stack(
+            children: [
+              const AuthHeader(),
+              Center(
+                child: SingleChildScrollView(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 60),
+                        Text('Вход', style: AppTextStyles.ttNorms24W900.white),
+                        const SizedBox(height: 40),
+                        AppTextField(
+                          controller: _emailController,
+                          hintText: 'Email',
+                          fillColor: AppColors.white,
+                          keyboardType: TextInputType.emailAddress,
                         ),
-                      ),
-                      const SizedBox(height: 40),
-                    ],
+                        const SizedBox(height: 20),
+                        AppTextField(
+                          controller: _passwordController,
+                          hintText: 'Пароль',
+                          obscureText: _obscurePassword,
+                          fillColor: AppColors.white,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: AppColors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        AppPrimaryButton(
+                          text: 'Войти',
+                          onPressed: isLoading ? null : _login,
+                          isLoading: isLoading,
+                          backgroundColor: AppColors.teacherButton,
+                          width: double.infinity,
+                        ),
+                        const SizedBox(height: 40),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(TextEditingController controller, String hintText) {
-    return Container(
-      width: 316,
-      height: 44,
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 12,
+            ],
           ),
-          hintText: hintText,
-          hintStyle: AppTextStyles.ttNorms16W400.copyWith(
-            color: AppColors.grey,
-          ),
-        ),
-        style: AppTextStyles.ttNorms16W400,
-      ),
-    );
-  }
-
-  Widget _buildPasswordField(
-    TextEditingController controller,
-    String hintText,
-  ) {
-    return Container(
-      width: 316,
-      height: 44,
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: TextField(
-        controller: controller,
-        obscureText: _obscurePassword,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 12,
-          ),
-          hintText: hintText,
-          hintStyle: AppTextStyles.ttNorms16W400.copyWith(
-            color: AppColors.grey,
-          ),
-          suffixIcon: IconButton(
-            icon: Icon(
-              _obscurePassword ? Icons.visibility_off : Icons.visibility,
-              color: AppColors.grey,
-            ),
-            onPressed: () {
-              setState(() {
-                _obscurePassword = !_obscurePassword;
-              });
-            },
-          ),
-        ),
-        style: AppTextStyles.ttNorms16W400,
-      ),
+        );
+      },
     );
   }
 }

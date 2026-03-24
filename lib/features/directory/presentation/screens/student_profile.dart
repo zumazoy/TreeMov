@@ -39,9 +39,14 @@ class StudentProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const AppBarTitle(text: 'Профиль'),
+        title: const AppBarTitle(
+          text: 'Профиль',
+          iconPath: 'assets/images/idcard_icon.png',
+        ),
         backgroundColor: theme.scaffoldBackgroundColor,
         foregroundColor: isDark ? AppColors.darkText : AppColors.grayFieldText,
+        centerTitle: false,
+        titleSpacing: 0,
         elevation: 0,
       ),
       body: ListView(

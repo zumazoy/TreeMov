@@ -111,9 +111,14 @@ class _StudentDirectoryScreenState extends State<StudentDirectoryScreen> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: AppBarTitle(text: 'Ученики ${widget.group.title ?? ''}'),
+        title: AppBarTitle(
+          text: 'Ученики ${widget.group.title ?? ''}',
+          iconPath: 'assets/images/group_icon.png',
+        ),
         backgroundColor: theme.scaffoldBackgroundColor,
         foregroundColor: isDark ? AppColors.darkText : AppColors.grayFieldText,
+        centerTitle: false,
+        titleSpacing: 0,
         elevation: 0,
       ),
       body: Column(

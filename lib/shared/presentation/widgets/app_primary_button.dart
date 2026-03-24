@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:treemov/core/themes/app_colors.dart';
+import 'package:treemov/core/themes/app_text_styles.dart';
 
 class AppPrimaryButton extends StatelessWidget {
   final String text;
@@ -44,14 +45,7 @@ class AppPrimaryButton extends StatelessWidget {
                   valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
                 ),
               )
-            : Text(
-                text,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'TT Norms',
-                ),
-              ),
+            : Text(text, style: AppTextStyles.ttNorms18W700.white),
       ),
     );
   }

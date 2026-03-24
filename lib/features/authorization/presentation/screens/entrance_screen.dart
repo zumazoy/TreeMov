@@ -3,6 +3,7 @@ import 'package:treemov/app/routes/app_routes.dart';
 import 'package:treemov/core/themes/app_colors.dart';
 import 'package:treemov/core/themes/app_text_styles.dart';
 import 'package:treemov/core/widgets/auth/auth_header.dart';
+import 'package:treemov/shared/presentation/widgets/app_primary_button.dart';
 
 class EntranceScreen extends StatelessWidget {
   const EntranceScreen({super.key});
@@ -14,7 +15,6 @@ class EntranceScreen extends StatelessWidget {
       body: Stack(
         children: [
           const AuthHeader(),
-
           Center(
             child: SingleChildScrollView(
               child: Container(
@@ -24,30 +24,30 @@ class EntranceScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 60),
-
                     Text(
                       'Вход',
                       style: AppTextStyles.ttNorms24W900.white,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 40),
-
-                    _buildRoleButton(
-                      context,
-                      'Ученик',
-                      AppRoutes.entranceKid,
-                      AppColors.entranceKidButton,
+                    AppPrimaryButton(
+                      text: 'Ученик',
+                      onPressed: () {
+                        Navigator.pushNamed(context, AppRoutes.entranceKid);
+                      },
+                      backgroundColor: AppColors.entranceKidButton,
+                      width: double.infinity,
                     ),
                     const SizedBox(height: 20),
-
-                    _buildRoleButton(
-                      context,
-                      'Преподаватель',
-                      AppRoutes.entranceTeacher,
-                      AppColors.kidButton,
+                    AppPrimaryButton(
+                      text: 'Преподаватель',
+                      onPressed: () {
+                        Navigator.pushNamed(context, AppRoutes.entranceTeacher);
+                      },
+                      backgroundColor: AppColors.kidButton,
+                      width: double.infinity,
                     ),
                     const SizedBox(height: 40),
-
                     TextButton(
                       onPressed: () {
                         Navigator.pushNamed(context, AppRoutes.registration);
@@ -72,34 +72,6 @@ class EntranceScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildRoleButton(
-    BuildContext context,
-    String text,
-    String route,
-    Color buttonColor,
-  ) {
-    return SizedBox(
-      width: 316,
-      height: 44,
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.pushNamed(context, route);
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: buttonColor,
-          foregroundColor: AppColors.white,
-          padding: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          elevation: 0,
-          shadowColor: Colors.transparent,
-        ),
-        child: Text(text, style: AppTextStyles.ttNorms16W700.white),
       ),
     );
   }
