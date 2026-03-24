@@ -75,13 +75,13 @@ class CalendarGrid extends StatelessWidget {
                   ),
                   if (hasEvents)
                     Positioned(
-                      bottom: 4,
+                      bottom: 1,
                       left: 0,
                       right: 0,
                       child: Center(
                         child: Container(
-                          width: 6,
-                          height: 6,
+                          width: 7,
+                          height: 7,
                           decoration: BoxDecoration(
                             color: theme.colorScheme.primary,
                             shape: BoxShape.circle,

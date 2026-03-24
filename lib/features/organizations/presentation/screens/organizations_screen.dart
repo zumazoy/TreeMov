@@ -4,6 +4,7 @@ import 'package:treemov/app/di/di.dart';
 import 'package:treemov/app/routes/app_routes.dart';
 import 'package:treemov/core/storage/secure_storage_repository.dart';
 import 'package:treemov/core/themes/app_colors.dart';
+import 'package:treemov/core/widgets/auth/logout_dialog.dart';
 import 'package:treemov/features/directory/presentation/widgets/app_bar_title.dart';
 import 'package:treemov/features/directory/presentation/widgets/search_field.dart';
 import 'package:treemov/features/organizations/data/models/invite_response_model.dart';
@@ -59,6 +60,15 @@ class _OrganizationsScreenState extends State<_OrganizationsScreenContent> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  /// Проверяем, пришел ли пользователь с экрана авторизации
+  bool _isRootScreen() {
+    // Получаем историю навигации
+    final navigator = Navigator.of(context);
+
+    // Если нельзя вернуться назад - значит это корневой экран
+    return !navigator.canPop();
   }
 
   void _onSearchChanged(String query) {
@@ -215,6 +225,10 @@ class _OrganizationsScreenState extends State<_OrganizationsScreenContent> {
     );
   }
 
+  Future<void> _handleLogout() async {
+    await LogoutDialog.show(context: context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -228,6 +242,7 @@ class _OrganizationsScreenState extends State<_OrganizationsScreenContent> {
         foregroundColor: isDark ? AppColors.darkText : AppColors.grayFieldText,
         elevation: 0,
         actions: [
+          // Кнопка обновления
           IconButton(
             icon: Icon(
               Icons.refresh,
@@ -235,6 +250,16 @@ class _OrganizationsScreenState extends State<_OrganizationsScreenContent> {
             ),
             onPressed: () => context.read<OrgsBloc>().add(LoadOrgsEvent()),
           ),
+          // Кнопка выхода
+          if (_isRootScreen())
+            IconButton(
+              icon: Icon(
+                Icons.logout,
+                color: isDark ? AppColors.darkText : AppColors.activityRed,
+              ),
+              onPressed: _handleLogout,
+              tooltip: 'Выйти из аккаунта',
+            ),
         ],
       ),
       body: Column(
