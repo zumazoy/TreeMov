@@ -9,10 +9,15 @@ class TopStudentsChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallScreen = screenSize.width < 360;
+    final isMediumScreen = screenSize.width >= 360 && screenSize.width < 600;
+    final isTablet = screenSize.width >= 600;
+
     final studentsWithScore = students.where((s) => s.score > 0).toList();
 
     if (studentsWithScore.length < 3) {
-      return _buildChartForAvailableStudents(studentsWithScore);
+      return _buildChartForAvailableStudents(studentsWithScore, screenSize);
     }
 
     final topThreeStudents = studentsWithScore
@@ -22,41 +27,58 @@ class TopStudentsChart extends StatelessWidget {
     final maxScore = topThreeStudents.first.score.toDouble();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
+      padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 0 : 8),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            height: 300,
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                Positioned(
-                  left: 20,
-                  bottom: 0,
-                  child: _buildChartWithAvatar(
-                    topThreeStudents[1],
-                    2,
-                    maxScore,
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  child: _buildChartWithAvatar(
-                    topThreeStudents[0],
-                    1,
-                    maxScore,
-                  ),
-                ),
-                Positioned(
-                  right: 20,
-                  bottom: 0,
-                  child: _buildChartWithAvatar(
-                    topThreeStudents[2],
-                    3,
-                    maxScore,
-                  ),
-                ),
-              ],
+            height: isTablet ? 350 : (isMediumScreen ? 300 : 280),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final availableWidth = constraints.maxWidth;
+                final spacing = availableWidth * 0.05;
+
+                return Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    Positioned(
+                      left: spacing,
+                      bottom: 25,
+                      child: _buildChartWithAvatar(
+                        topThreeStudents[1],
+                        2,
+                        maxScore,
+                        isSmallScreen,
+                        isMediumScreen,
+                        isTablet,
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 25,
+                      child: _buildChartWithAvatar(
+                        topThreeStudents[0],
+                        1,
+                        maxScore,
+                        isSmallScreen,
+                        isMediumScreen,
+                        isTablet,
+                      ),
+                    ),
+                    Positioned(
+                      right: spacing,
+                      bottom: 25,
+                      child: _buildChartWithAvatar(
+                        topThreeStudents[2],
+                        3,
+                        maxScore,
+                        isSmallScreen,
+                        isMediumScreen,
+                        isTablet,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ],
@@ -66,16 +88,20 @@ class TopStudentsChart extends StatelessWidget {
 
   Widget _buildChartForAvailableStudents(
     List<StudentEntity> studentsWithScore,
+    Size screenSize,
   ) {
+    final isSmallScreen = screenSize.width < 360;
+    final isMediumScreen = screenSize.width >= 360 && screenSize.width < 600;
+
     if (studentsWithScore.isEmpty) {
       return SizedBox(
-        height: 300,
+        height: 200,
         child: Center(
           child: Text(
             'Нет данных для отображения',
             style: TextStyle(
               color: AppColors.achievementDeepBlue,
-              fontSize: 16,
+              fontSize: isSmallScreen ? 14 : 16,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -89,11 +115,12 @@ class TopStudentsChart extends StatelessWidget {
     final studentCount = sortedStudents.length;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
+      padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            height: 300,
+            height: isMediumScreen ? 280 : 260,
             child: Stack(
               alignment: Alignment.bottomCenter,
               children: [
@@ -104,25 +131,34 @@ class TopStudentsChart extends StatelessWidget {
                       sortedStudents[0],
                       1,
                       maxScore,
+                      isSmallScreen,
+                      isMediumScreen,
+                      false,
                     ),
                   ),
                 ] else if (studentCount == 2) ...[
                   Positioned(
-                    left: 60,
+                    left: screenSize.width * 0.1,
                     bottom: 0,
                     child: _buildChartWithAvatar(
                       sortedStudents[0],
                       1,
                       maxScore,
+                      isSmallScreen,
+                      isMediumScreen,
+                      false,
                     ),
                   ),
                   Positioned(
-                    right: 60,
+                    right: screenSize.width * 0.1,
                     bottom: 0,
                     child: _buildChartWithAvatar(
                       sortedStudents[1],
                       2,
                       maxScore,
+                      isSmallScreen,
+                      isMediumScreen,
+                      false,
                     ),
                   ),
                 ],
@@ -138,25 +174,58 @@ class TopStudentsChart extends StatelessWidget {
     StudentEntity student,
     int position,
     double maxScore,
+    bool isSmallScreen,
+    bool isMediumScreen,
+    bool isTablet,
   ) {
     final chartHeight = _calculateChartHeight(student.score, maxScore);
-    final width = position == 1 ? 130.0 : 110.0;
+
+    final width = _getChartWidth(
+      position,
+      isSmallScreen,
+      isMediumScreen,
+      isTablet,
+    );
+    final avatarRadius = _getAvatarRadius(
+      isSmallScreen,
+      isMediumScreen,
+      isTablet,
+    );
+    final fontSize = _getFontSize(isSmallScreen, isMediumScreen, isTablet);
+    final scoreFontSize = _getScoreFontSize(
+      isSmallScreen,
+      isMediumScreen,
+      isTablet,
+    );
+    final iconSize = _getIconSize(isSmallScreen, isMediumScreen, isTablet);
+    final nameFontSize = _getNameFontSize(
+      isSmallScreen,
+      isMediumScreen,
+      isTablet,
+    );
+    final nameMaxLines = _getNameMaxLines(
+      isSmallScreen,
+      isMediumScreen,
+      isTablet,
+    );
+    final padding = _getPadding(isSmallScreen, isMediumScreen, isTablet);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Transform.translate(
-          offset: const Offset(0, -10),
+          offset: Offset(0, isSmallScreen ? -5 : -8),
           child: Stack(
             children: [
               CircleAvatar(
-                radius: 36,
+                radius: avatarRadius.toDouble(),
                 backgroundColor: AppColors.achievementDeepBlue,
                 child: Text(
                   student.initials,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
+                    fontSize: fontSize.toDouble(),
                   ),
                 ),
               ),
@@ -164,16 +233,16 @@ class TopStudentsChart extends StatelessWidget {
                 right: 0,
                 bottom: 0,
                 child: Container(
-                  padding: const EdgeInsets.all(5),
+                  padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
                   decoration: const BoxDecoration(
                     color: Color.fromARGB(255, 253, 253, 253),
                     shape: BoxShape.circle,
                   ),
                   child: Text(
                     position.toString(),
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 57, 119, 199),
-                      fontSize: 12,
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 57, 119, 199),
+                      fontSize: isSmallScreen ? 10 : 11,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -182,10 +251,11 @@ class TopStudentsChart extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Container(
-          width: width,
+          width: width.toDouble(),
           height: chartHeight,
+          padding: EdgeInsets.all(padding),
           decoration: BoxDecoration(
             color: Colors.white.withAlpha(128),
             borderRadius: BorderRadius.circular(12),
@@ -193,34 +263,39 @@ class TopStudentsChart extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                student.fullName,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: AppColors.achievementDeepBlue,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+              Flexible(
+                child: Tooltip(
+                  message: student.fullName,
+                  child: Text(
+                    student.fullName,
+                    textAlign: TextAlign.center,
+                    maxLines: nameMaxLines,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: AppColors.achievementDeepBlue,
+                      fontSize: nameFontSize.toDouble(),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: isSmallScreen ? 2 : 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     student.score.toString(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.achievementDeepBlue,
-                      fontSize: 16,
+                      fontSize: scoreFontSize.toDouble(),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(width: 4),
-                  const Icon(
+                  Icon(
                     Icons.bolt,
                     color: AppColors.achievementDeepBlue,
-                    size: 18,
+                    size: iconSize.toDouble(),
                   ),
                 ],
               ),
@@ -231,11 +306,92 @@ class TopStudentsChart extends StatelessWidget {
     );
   }
 
+  double _getChartWidth(
+    int position,
+    bool isSmallScreen,
+    bool isMediumScreen,
+    bool isTablet,
+  ) {
+    if (isTablet) {
+      return position == 1 ? 180 : 160;
+    } else if (isMediumScreen) {
+      return position == 1 ? 140 : 120;
+    } else if (isSmallScreen) {
+      return position == 1 ? 100 : 85;
+    }
+    return position == 1 ? 130 : 110;
+  }
+
+  double _getAvatarRadius(
+    bool isSmallScreen,
+    bool isMediumScreen,
+    bool isTablet,
+  ) {
+    if (isTablet) return 44;
+    if (isMediumScreen) return 38;
+    if (isSmallScreen) return 30;
+    return 36;
+  }
+
+  double _getFontSize(bool isSmallScreen, bool isMediumScreen, bool isTablet) {
+    if (isTablet) return 16;
+    if (isMediumScreen) return 14;
+    if (isSmallScreen) return 12;
+    return 14;
+  }
+
+  double _getScoreFontSize(
+    bool isSmallScreen,
+    bool isMediumScreen,
+    bool isTablet,
+  ) {
+    if (isTablet) return 18;
+    if (isMediumScreen) return 16;
+    if (isSmallScreen) return 14;
+    return 16;
+  }
+
+  double _getIconSize(bool isSmallScreen, bool isMediumScreen, bool isTablet) {
+    if (isTablet) return 20;
+    if (isMediumScreen) return 18;
+    if (isSmallScreen) return 16;
+    return 18;
+  }
+
+  double _getNameFontSize(
+    bool isSmallScreen,
+    bool isMediumScreen,
+    bool isTablet,
+  ) {
+    if (isTablet) return 14;
+    if (isMediumScreen) return 11;
+    if (isSmallScreen) return 9;
+    return 12;
+  }
+
+  int _getNameMaxLines(bool isSmallScreen, bool isMediumScreen, bool isTablet) {
+    if (isTablet) return 2;
+    if (isMediumScreen) return 2;
+    if (isSmallScreen) return 1;
+    return 2;
+  }
+
+  double _getPadding(bool isSmallScreen, bool isMediumScreen, bool isTablet) {
+    if (isTablet) return 12;
+    if (isMediumScreen) return 8;
+    if (isSmallScreen) return 6;
+    return 10;
+  }
+
   double _calculateChartHeight(int studentScore, double maxScore) {
-    const double minHeight = 80.0;
-    const double maxHeight = 160.0;
+    const double minHeight = 50.0;
+    const double maxHeight = 130.0;
+
+    if (maxScore == 0) return minHeight;
 
     final double percentage = studentScore / maxScore;
-    return minHeight + (percentage * (maxHeight - minHeight));
+    final double adjustedHeight =
+        minHeight + (percentage * (maxHeight - minHeight));
+    return adjustedHeight.clamp(minHeight, maxHeight);
   }
 }

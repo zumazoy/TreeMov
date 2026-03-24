@@ -5,13 +5,11 @@ import 'package:treemov/core/themes/app_text_styles.dart';
 class StatsRowWidget extends StatelessWidget {
   final int totalEarnings;
   final int attendance;
-  final int achievementsCount;
 
   const StatsRowWidget({
     super.key,
     required this.totalEarnings,
     required this.attendance,
-    required this.achievementsCount,
   });
 
   @override
@@ -37,17 +35,6 @@ class StatsRowWidget extends StatelessWidget {
               label: 'посещаемость',
               valueColor: AppColors.statsPinnedText,
               iconColor: AppColors.statsPinnedText,
-            ),
-          ),
-          const SizedBox(width: 8),
-
-          Expanded(
-            child: _buildStatCard(
-              iconPath: 'assets/images/achievement_icon.png',
-              value: achievementsCount.toString(),
-              label: 'достижения',
-              valueColor: AppColors.categoryGeneralText,
-              iconColor: AppColors.categoryGeneralText,
             ),
           ),
         ],

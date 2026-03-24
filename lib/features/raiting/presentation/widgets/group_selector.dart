@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:treemov/shared/data/models/student_group_response_model.dart';
 
-class GroupSelector extends StatefulWidget {
+class GroupSelector extends StatelessWidget {
   final List<GroupStudentsResponseModel> groups;
   final GroupStudentsResponseModel? selectedGroup;
   final Function(GroupStudentsResponseModel) onGroupSelected;
@@ -14,177 +14,118 @@ class GroupSelector extends StatefulWidget {
   });
 
   @override
-  State<GroupSelector> createState() => _GroupSelectorState();
-}
-
-class _GroupSelectorState extends State<GroupSelector> {
-  bool _isOpen = false;
-  final LayerLink _layerLink = LayerLink();
-  OverlayEntry? _overlayEntry;
-
-  @override
-  void dispose() {
-    _removeOverlay();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (widget.groups.isEmpty) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
+    final leftMargin = screenWidth * 0.05;
+    final rightMargin = screenWidth * 0.03;
+
+    if (groups.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    return CompositedTransformTarget(
-      link: _layerLink,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        height: 36,
-        width: double.infinity,
-        child: Material(
-          color: const Color(0xFF0099E9),
-          borderRadius: BorderRadius.circular(30),
-          child: InkWell(
-            onTap: () {
-              if (_isOpen) {
-                setState(() => _isOpen = false);
-                _removeOverlay();
-              } else {
-                setState(() => _isOpen = true);
-                _showOverlay();
-              }
-            },
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: screenWidth * 0.04,
+        vertical: isSmallScreen ? 0 : 2,
+      ),
+      height: isSmallScreen ? 36 : 48,
+      child: PopupMenuButton<GroupStudentsResponseModel>(
+        offset: const Offset(0, 0),
+        color: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        elevation: 8,
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.4,
+          minWidth: screenWidth - leftMargin - rightMargin,
+          maxWidth: screenWidth - leftMargin - rightMargin,
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF0099E9),
             borderRadius: BorderRadius.circular(30),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.selectedGroup?.title ?? 'Выберите группу',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const Icon(
-                    Icons.keyboard_arrow_down_rounded,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 12 : 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  selectedGroup?.title ?? 'Выберите группу',
+                  style: TextStyle(
                     color: Colors.white,
-                    size: 20,
+                    fontSize: isSmallScreen ? 14 : 16,
+                    fontWeight: FontWeight.w600,
                   ),
-                ],
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-            ),
+              Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: Colors.white,
+                size: isSmallScreen ? 20 : 24,
+              ),
+            ],
           ),
         ),
-      ),
-    );
-  }
+        onSelected: (group) {
+          if (selectedGroup?.id != group.id) {
+            onGroupSelected(group);
+          }
+        },
+        itemBuilder: (context) {
+          return groups.map((group) {
+            final isSelected = selectedGroup?.id == group.id;
 
-  void _showOverlay() {
-    _removeOverlay();
-
-    final renderBox = context.findRenderObject() as RenderBox;
-    final offset = renderBox.localToGlobal(Offset.zero);
-    final size = renderBox.size;
-
-    _overlayEntry = OverlayEntry(
-      builder: (context) => Stack(
-        children: [
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isOpen = false;
-                });
-                _removeOverlay();
-              },
-              behavior: HitTestBehavior.opaque,
-            ),
-          ),
-          Positioned(
-            left: offset.dx,
-            top: offset.dy + size.height + 4,
-            width: size.width,
-            child: Material(
-              elevation: 8,
-              borderRadius: BorderRadius.circular(20),
+            return PopupMenuItem<GroupStudentsResponseModel>(
+              value: group,
+              padding: EdgeInsets.zero,
               child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0099E9),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: Colors.white.withAlpha(51),
-                    width: 1,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.grey.withAlpha(51),
+                      width: groups.indexOf(group) != groups.length - 1
+                          ? 0.5
+                          : 0,
+                    ),
                   ),
                 ),
-                constraints: BoxConstraints(maxHeight: 36 * 5.5),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    itemCount: widget.groups.length,
-                    itemBuilder: (context, index) {
-                      final group = widget.groups[index];
-                      final isSelected = widget.selectedGroup?.id == group.id;
-
-                      return InkWell(
-                        onTap: () {
-                          widget.onGroupSelected(group);
-                          setState(() {
-                            _isOpen = false;
-                          });
-                          _removeOverlay();
-                        },
-                        child: Container(
-                          height: 36,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        group.title ?? 'Группа ${group.id}',
+                        style: TextStyle(
                           color: isSelected
-                              ? Colors.white.withAlpha(51)
-                              : Colors.transparent,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  group.title ?? 'Группа ${group.id}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              if (isSelected)
-                                const Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: 16,
-                                ),
-                            ],
-                          ),
+                              ? const Color(0xFF0099E9)
+                              : Colors.grey.shade800,
+                          fontSize: 14,
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.w500,
                         ),
-                      );
-                    },
-                  ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (isSelected)
+                      Icon(
+                        Icons.check_circle_rounded,
+                        color: const Color(0xFF0099E9),
+                        size: 18,
+                      ),
+                  ],
                 ),
               ),
-            ),
-          ),
-        ],
+            );
+          }).toList();
+        },
       ),
     );
-
-    Overlay.of(context).insert(_overlayEntry!);
-  }
-
-  void _removeOverlay() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
   }
 }

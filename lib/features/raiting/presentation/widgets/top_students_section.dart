@@ -15,9 +15,10 @@ class TopStudentsSection extends StatelessWidget {
     final topThree = _getTopThree(sortedStudents);
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (sortedStudents.isNotEmpty)
-          TopStudentsChart(students: topThree)
+          Flexible(child: TopStudentsChart(students: topThree))
         else
           const Center(
             child: Padding(
@@ -31,7 +32,6 @@ class TopStudentsSection extends StatelessWidget {
               ),
             ),
           ),
-        const SizedBox(height: 300),
       ],
     );
   }

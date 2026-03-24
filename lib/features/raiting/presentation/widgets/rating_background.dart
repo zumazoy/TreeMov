@@ -7,6 +7,9 @@ class RatingBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final backgroundHeight = screenHeight * 0.35;
+
     return Stack(
       children: [
         Positioned.fill(
@@ -22,9 +25,9 @@ class RatingBackground extends StatelessWidget {
             blendMode: BlendMode.dstIn,
             child: Image.asset(
               'assets/images/background_raiting.png',
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.cover,
               width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.35,
+              height: backgroundHeight,
               alignment: Alignment.topCenter,
             ),
           ),
