@@ -100,7 +100,6 @@ class _StudentProfileContent extends StatelessWidget {
                               StatsRowWidget(
                                 totalEarnings: state.totalEarnings,
                                 attendance: 95,
-                                achievementsCount: state.achievementsCount,
                               ),
                               const SizedBox(height: 16),
                             ],

@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:treemov/features/kid_profile/domain/repositories/student_profile_repository.dart';
 import 'package:treemov/shared/data/models/accrual_response_model.dart';
 import 'package:treemov/shared/data/models/student_response_model.dart';
@@ -31,13 +30,9 @@ class StudentProfileBloc
       );
 
       if (studentProfile.id != null) {
-        debugPrint(
-          '🔄 Автоматическая загрузка активностей для ученика ID: ${studentProfile.id}',
-        );
         add(LoadStudentActivities());
       }
     } catch (e) {
-      debugPrint('❌ Ошибка загрузки профиля: $e');
       emit(state.copyWith(isLoadingProfile: false, profileError: e.toString()));
     }
   }
@@ -47,10 +42,8 @@ class StudentProfileBloc
     Emitter<StudentProfileState> emit,
   ) async {
     final studentId = state.studentProfile?.id;
-    debugPrint('📝 Загрузка активностей для ученика ID: $studentId');
 
     if (studentId == null) {
-      debugPrint('❌ ID ученика не найден');
       emit(
         state.copyWith(
           activitiesError: 'ID ученика не найден',
@@ -68,16 +61,9 @@ class StudentProfileBloc
         page: 1,
       );
 
-      debugPrint(
-        '📊 Получено всего начислений от сервера: ${allActivities.length}',
-      );
       final filteredActivities = allActivities.where((accrual) {
         return accrual.student?.id == studentId;
       }).toList();
-
-      debugPrint(
-        '📊 Отфильтровано для ученика $studentId: ${filteredActivities.length}',
-      );
 
       final sortedActivities =
           List<AccrualResponseModel>.from(filteredActivities)..sort((a, b) {
@@ -90,14 +76,6 @@ class StudentProfileBloc
 
       final lastTenActivities = sortedActivities.take(10).toList();
 
-      if (lastTenActivities.isNotEmpty) {
-        debugPrint('📊 Показываем последние 10 начислений:');
-        debugPrint('   Самое новое: ${lastTenActivities.first.createdAt}');
-        debugPrint('   Самое старое: ${lastTenActivities.last.createdAt}');
-      } else {
-        debugPrint('📊 Нет начислений для отображения');
-      }
-
       emit(
         state.copyWith(
           activities: lastTenActivities,
@@ -105,7 +83,6 @@ class StudentProfileBloc
         ),
       );
     } catch (e) {
-      debugPrint('❌ Ошибка загрузки активностей: $e');
       emit(
         state.copyWith(
           isLoadingActivities: false,
