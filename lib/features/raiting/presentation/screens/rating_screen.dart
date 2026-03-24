@@ -74,6 +74,8 @@ class _RatingScreenState extends State<RatingScreen> {
       state.currentStudent,
     );
 
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: AppColors.skyBlue,
       body: RatingBackground(
@@ -96,6 +98,7 @@ class _RatingScreenState extends State<RatingScreen> {
                 slivers: [
                   SliverToBoxAdapter(
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         const RatingAppBar(),
                         if (state.groups.isNotEmpty)
@@ -106,8 +109,16 @@ class _RatingScreenState extends State<RatingScreen> {
                               _ratingBloc.add(ChangeGroupEvent(group));
                             },
                           ),
-                        const SizedBox(height: 16),
-                        TopStudentsSection(students: sortedStudents),
+                        SizedBox(height: screenHeight * 0.02),
+                        Container(
+                          height: screenHeight * 0.45,
+                          constraints: BoxConstraints(
+                            minHeight: 250,
+                            maxHeight: screenHeight * 0.5,
+                          ),
+                          child: TopStudentsSection(students: sortedStudents),
+                        ),
+                        SizedBox(height: screenHeight * 0.3),
                       ],
                     ),
                   ),

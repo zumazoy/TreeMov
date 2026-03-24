@@ -22,25 +22,15 @@ class StudentsDraggableSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-      '🎯 StudentsDraggableSheet: currentStudent = ${currentStudent?.id}',
-    );
-    debugPrint('🎯 StudentsDraggableSheet: showPinnedCard = $showPinnedCard');
-    debugPrint(
-      '🎯 StudentsDraggableSheet: currentUserPosition = $currentUserPosition',
-    );
-
-    if (currentStudent != null) {
-      final found = students.any((s) => s.id == currentStudent!.id);
-      debugPrint('🎯 StudentsDraggableSheet: student found in list = $found');
-    }
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isSmallScreen = screenHeight < 700;
 
     return DraggableScrollableSheet(
-      initialChildSize: 0.45,
-      minChildSize: 0.45,
-      maxChildSize: 0.87,
+      initialChildSize: isSmallScreen ? 0.5 : 0.45,
+      minChildSize: isSmallScreen ? 0.5 : 0.45,
+      maxChildSize: isSmallScreen ? 0.9 : 0.87,
       snap: true,
-      snapSizes: const [0.45, 0.85],
+      snapSizes: isSmallScreen ? const [0.5, 0.85] : const [0.45, 0.85],
       builder: (BuildContext context, ScrollController scrollController) {
         return Container(
           decoration: const BoxDecoration(
@@ -58,9 +48,7 @@ class StudentsDraggableSheet extends StatelessWidget {
             onNotification: (ScrollNotification notification) {
               if (currentStudent != null &&
                   students.any((s) => s.id == currentStudent!.id)) {
-                _handleScrollNotification(notification);
-              } else {
-                debugPrint('🎯 Scroll: currentStudent null or not in list');
+                _handleScrollNotification(notification, context);
               }
               return false;
             },
@@ -78,16 +66,17 @@ class StudentsDraggableSheet extends StatelessWidget {
                             currentStudent != null &&
                             student.id == currentStudent!.id;
 
-                        if (isCurrentUser) {
-                          debugPrint(
-                            '🎯 Rendering current student at index $index',
-                          );
-                        }
-
-                        return StudentCard(
-                          student: student,
-                          position: position,
-                          isCurrentUser: isCurrentUser,
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.of(context).size.width * 0.04,
+                            vertical: 4,
+                          ),
+                          child: StudentCard(
+                            student: student,
+                            position: position,
+                            isCurrentUser: isCurrentUser,
+                          ),
                         );
                       }, childCount: students.length),
                     ),
@@ -96,7 +85,7 @@ class StudentsDraggableSheet extends StatelessWidget {
                         height:
                             currentStudent != null &&
                                 students.any((s) => s.id == currentStudent!.id)
-                            ? 80
+                            ? (isSmallScreen ? 60 : 80)
                             : 0,
                       ),
                     ),
@@ -120,8 +109,14 @@ class StudentsDraggableSheet extends StatelessWidget {
     );
   }
 
-  void _handleScrollNotification(ScrollNotification notification) {
-    const itemHeight = 72.0;
+  void _handleScrollNotification(
+    ScrollNotification notification,
+    BuildContext context,
+  ) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isSmallScreen = screenHeight < 700;
+    final itemHeight = isSmallScreen ? 68.0 : 72.0;
+
     final scrollOffset = notification.metrics.pixels;
     final viewportHeight = notification.metrics.viewportDimension;
 
@@ -129,16 +124,6 @@ class StudentsDraggableSheet extends StatelessWidget {
     final userIsAboveViewport = userPosition + itemHeight <= scrollOffset;
     final userIsBelowViewport = userPosition >= scrollOffset + viewportHeight;
     final shouldShowPinned = userIsAboveViewport || userIsBelowViewport;
-
-    debugPrint(
-      '🎯 Scroll: offset=$scrollOffset, viewport=$viewportHeight, userPos=$userPosition',
-    );
-    debugPrint(
-      '🎯 Scroll: above=$userIsAboveViewport, below=$userIsBelowViewport',
-    );
-    debugPrint(
-      '🎯 Scroll: shouldShowPinned=$shouldShowPinned, current=$showPinnedCard',
-    );
 
     if (showPinnedCard != shouldShowPinned) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
