@@ -24,6 +24,43 @@ class GroupSelector extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    if (groups.length == 1) {
+      return Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.04,
+          vertical: isSmallScreen ? 0 : 2,
+        ),
+        height: isSmallScreen ? 36 : 48,
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF0099E9),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 12 : 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  selectedGroup?.title ??
+                      groups.first.title ??
+                      'Выберите группу',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: isSmallScreen ? 14 : 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              // Убираем иконку стрелки, чтобы визуально было понятно, что список не раскрывается
+              const SizedBox(width: 24),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: screenWidth * 0.04,
