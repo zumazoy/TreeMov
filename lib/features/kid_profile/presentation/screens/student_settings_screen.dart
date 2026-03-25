@@ -11,7 +11,6 @@ import 'package:treemov/features/kid_profile/presentation/widgets/student_settin
 import 'package:treemov/features/kid_profile/presentation/widgets/student_settings_profile_section.dart';
 import 'package:treemov/features/kid_profile/presentation/widgets/student_settings_security_section.dart';
 import 'package:treemov/features/kid_profile/presentation/widgets/student_settings_support_section.dart';
-import 'package:treemov/features/kid_profile/presentation/widgets/student_settings_system_section.dart';
 import 'package:treemov/shared/data/models/student_response_model.dart';
 
 class StudentSettingsScreen extends StatefulWidget {
@@ -28,11 +27,11 @@ class _StudentSettingsScreenState extends State<StudentSettingsScreen> {
   bool _emailNotificationsEnabled = false;
   bool _pushNotificationsEnabled = true;
   bool _showProgress = true;
-  bool _soundEnabled = true;
-  bool _autoSaveEnabled = true;
+  // bool _soundEnabled = true;
+  // bool _autoSaveEnabled = true;
   bool _parentNotifications = false;
   bool _showPhotosInLists = true;
-  bool _offlineModeEnabled = false;
+  // bool _offlineModeEnabled = false;
 
   void _navigate(String destination) {
     debugPrint('Navigate to: $destination');
@@ -97,16 +96,15 @@ class _StudentSettingsScreenState extends State<StudentSettingsScreen> {
             },
           ),
 
-          StudentSettingsSystemSection(
-            soundEnabled: _soundEnabled,
-            autoSaveEnabled: _autoSaveEnabled,
-            offlineModeEnabled: _offlineModeEnabled,
-            onSoundChanged: (v) => setState(() => _soundEnabled = v),
-            onAutoSaveChanged: (v) => setState(() => _autoSaveEnabled = v),
-            onOfflineModeChanged: (v) =>
-                setState(() => _offlineModeEnabled = v),
-          ),
-
+          // StudentSettingsSystemSection(
+          //   soundEnabled: _soundEnabled,
+          //   autoSaveEnabled: _autoSaveEnabled,
+          //   offlineModeEnabled: _offlineModeEnabled,
+          //   onSoundChanged: (v) => setState(() => _soundEnabled = v),
+          //   onAutoSaveChanged: (v) => setState(() => _autoSaveEnabled = v),
+          //   onOfflineModeChanged: (v) =>
+          //       setState(() => _offlineModeEnabled = v),
+          // ),
           StudentSettingsSecuritySection(
             onChangePasswordTap: () => _navigate('Change Password'),
             onTwoFactorTap: () => _navigate('Two Factor Auth'),

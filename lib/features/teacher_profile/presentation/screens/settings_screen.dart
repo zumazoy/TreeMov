@@ -10,7 +10,6 @@ import 'package:treemov/features/teacher_profile/presentation/widgets/settings_n
 import 'package:treemov/features/teacher_profile/presentation/widgets/settings_profile_section.dart';
 import 'package:treemov/features/teacher_profile/presentation/widgets/settings_security_section.dart';
 import 'package:treemov/features/teacher_profile/presentation/widgets/settings_support_section.dart';
-import 'package:treemov/features/teacher_profile/presentation/widgets/settings_system_section.dart';
 import 'package:treemov/shared/data/models/org_member_response_model.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -27,8 +26,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _emailNotificationsEnabled = false;
   bool _pushNotificationsEnabled = true;
   bool _showPhotosInLists = true;
-  bool _soundEnabled = true;
-  bool _autoSaveEnabled = true;
+  // bool _soundEnabled = true;
+  // bool _autoSaveEnabled = true;
 
   void _navigate(String destination) {
     debugPrint('Navigate to: $destination');
@@ -87,13 +86,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
 
-          SettingsSystemSection(
-            soundEnabled: _soundEnabled,
-            autoSaveEnabled: _autoSaveEnabled,
-            onSoundChanged: (v) => setState(() => _soundEnabled = v),
-            onAutoSaveChanged: (v) => setState(() => _autoSaveEnabled = v),
-          ),
-
+          // SettingsSystemSection(
+          //   soundEnabled: _soundEnabled,
+          //   autoSaveEnabled: _autoSaveEnabled,
+          //   onSoundChanged: (v) => setState(() => _soundEnabled = v),
+          //   onAutoSaveChanged: (v) => setState(() => _autoSaveEnabled = v),
+          // ),
           SettingsSecuritySection(
             onChangePasswordTap: () => _navigate('Change Password'),
             onTwoFactorTap: () => _navigate('2FA Settings'),

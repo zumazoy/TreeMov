@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:treemov/features/teacher_profile/presentation/widgets/settings_card.dart';
-import 'package:treemov/features/teacher_profile/presentation/widgets/settings_section_title.dart';
 import 'package:treemov/features/teacher_profile/presentation/widgets/settings_toggle_row.dart';
 
 class SettingsAppearanceSection extends StatelessWidget {
@@ -19,14 +18,10 @@ class SettingsAppearanceSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context);
 
     return Column(
       children: [
-        const SettingsSectionTitle(
-          title: 'Внешний вид',
-          icon: Icons.brightness_6_outlined,
-        ),
         SettingsCard(
           children: [
             SettingsToggleRow(
@@ -34,18 +29,6 @@ class SettingsAppearanceSection extends StatelessWidget {
               subtitle: 'Использовать тёмное оформление',
               value: darkModeEnabled,
               onChanged: onDarkModeChanged,
-            ),
-            Divider(
-              height: 1,
-              indent: 16,
-              endIndent: 16,
-              color: theme.dividerColor,
-            ),
-            SettingsToggleRow(
-              title: 'Фото учеников',
-              subtitle: 'Показывать фотографии в списках',
-              value: showPhotosInLists,
-              onChanged: onShowPhotosChanged,
             ),
           ],
         ),

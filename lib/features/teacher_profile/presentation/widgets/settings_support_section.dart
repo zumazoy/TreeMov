@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:treemov/features/teacher_profile/presentation/widgets/settings_card.dart';
 import 'package:treemov/features/teacher_profile/presentation/widgets/settings_nav_row.dart';
-import 'package:treemov/features/teacher_profile/presentation/widgets/settings_section_title.dart';
 
 class SettingsSupportSection extends StatelessWidget {
   final VoidCallback onHelpTap;
@@ -17,14 +16,10 @@ class SettingsSupportSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context);
 
     return Column(
       children: [
-        const SettingsSectionTitle(
-          title: 'Поддержка',
-          icon: Icons.help_outline,
-        ),
         SettingsCard(
           children: [
             SettingsNavRow(
@@ -32,26 +27,14 @@ class SettingsSupportSection extends StatelessWidget {
               subtitle: 'Руководство пользователя',
               onTap: onHelpTap,
             ),
-            Divider(
-              height: 1,
-              indent: 16,
-              endIndent: 16,
-              color: theme.dividerColor,
-            ),
             SettingsNavRow(
               title: 'Обратная связь',
               subtitle: 'Отправить отзыв или предложение',
               onTap: onFeedbackTap,
             ),
-            Divider(
-              height: 1,
-              indent: 16,
-              endIndent: 16,
-              color: theme.dividerColor,
-            ),
             SettingsNavRow(
               title: 'О системе',
-              subtitle: 'Версия 1.2.3',
+              subtitle: 'Версия 1.0.0',
               onTap: onAboutTap,
             ),
           ],

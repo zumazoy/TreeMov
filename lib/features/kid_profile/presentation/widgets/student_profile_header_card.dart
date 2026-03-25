@@ -68,17 +68,6 @@ class StudentProfileHeaderCard extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: AppColors.kidButton,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              'Уровень ${_calculateLevel(student?.score ?? 0)}',
-              style: AppTextStyles.ttNorms11W400.white,
-            ),
-          ),
         ],
       ),
     );
@@ -94,9 +83,5 @@ class StudentProfileHeaderCard extends StatelessWidget {
         : '';
 
     return (nameFirst + surnameFirst).toUpperCase();
-  }
-
-  int _calculateLevel(int points) {
-    return (points / 100).floor() + 1;
   }
 }

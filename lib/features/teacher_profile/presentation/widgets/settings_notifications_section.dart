@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:treemov/features/teacher_profile/presentation/widgets/settings_card.dart';
-import 'package:treemov/features/teacher_profile/presentation/widgets/settings_section_title.dart';
 import 'package:treemov/features/teacher_profile/presentation/widgets/settings_toggle_row.dart';
 
 class SettingsNotificationsSection extends StatelessWidget {
@@ -23,45 +22,17 @@ class SettingsNotificationsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context);
 
     return Column(
       children: [
-        const SettingsSectionTitle(
-          title: 'Уведомления',
-          icon: Icons.notifications_none,
-        ),
         SettingsCard(
           children: [
-            SettingsToggleRow(
-              title: 'Уведомления',
-              subtitle: 'Получать уведомления в приложении',
-              value: notificationsEnabled,
-              onChanged: onNotificationsChanged,
-            ),
-            Divider(
-              height: 1,
-              indent: 16,
-              endIndent: 16,
-              color: theme.dividerColor,
-            ),
             SettingsToggleRow(
               title: 'Email уведомления',
               subtitle: 'Получать уведомления на почту',
               value: emailNotificationsEnabled,
               onChanged: onEmailChanged,
-            ),
-            Divider(
-              height: 1,
-              indent: 16,
-              endIndent: 16,
-              color: theme.dividerColor,
-            ),
-            SettingsToggleRow(
-              title: 'Push уведомления',
-              subtitle: 'Получать push-уведомления на устройство',
-              value: pushNotificationsEnabled,
-              onChanged: onPushChanged,
             ),
           ],
         ),

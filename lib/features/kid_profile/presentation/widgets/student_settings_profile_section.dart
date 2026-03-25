@@ -20,23 +20,6 @@ class StudentSettingsProfileSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 16, top: 12, bottom: 4),
-          child: Row(
-            children: [
-              Icon(Icons.person_outline, size: 24, color: Colors.white),
-              SizedBox(width: 8),
-              Text(
-                'Профиль',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
         StudentSettingsCard(
           children: [
             StudentSettingsNavRow(
@@ -44,24 +27,10 @@ class StudentSettingsProfileSection extends StatelessWidget {
               subtitle: 'Изменить личные данные',
               onTap: onEditProfileTap,
             ),
-            const Divider(
-              height: 1,
-              indent: 16,
-              endIndent: 16,
-              color: AppColors.eventTap,
-            ),
             StudentSettingsNavRow(
               title: 'Изменить аватар',
               subtitle: 'Загрузить новое фото',
               onTap: onChangePhotoTap,
-            ),
-
-            // НОВАЯ КНОПКА: Мои организации
-            const Divider(
-              height: 1,
-              indent: 16,
-              endIndent: 16,
-              color: AppColors.eventTap,
             ),
 
             // Специальный ListTile для организаций

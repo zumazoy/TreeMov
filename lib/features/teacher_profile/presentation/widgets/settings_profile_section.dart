@@ -3,7 +3,6 @@ import 'package:treemov/app/routes/app_routes.dart';
 import 'package:treemov/core/themes/app_text_styles.dart';
 import 'package:treemov/features/teacher_profile/presentation/widgets/settings_card.dart';
 import 'package:treemov/features/teacher_profile/presentation/widgets/settings_nav_row.dart';
-import 'package:treemov/features/teacher_profile/presentation/widgets/settings_section_title.dart';
 
 class SettingsProfileSection extends StatelessWidget {
   final VoidCallback onEditProfileTap;
@@ -21,10 +20,6 @@ class SettingsProfileSection extends StatelessWidget {
 
     return Column(
       children: [
-        const SettingsSectionTitle(
-          title: 'Профиль',
-          icon: Icons.person_outline,
-        ),
         SettingsCard(
           children: [
             SettingsNavRow(
@@ -32,23 +27,10 @@ class SettingsProfileSection extends StatelessWidget {
               subtitle: 'Изменить личные данные',
               onTap: onEditProfileTap,
             ),
-            Divider(
-              height: 1,
-              indent: 16,
-              endIndent: 16,
-              color: theme.dividerColor,
-            ),
             SettingsNavRow(
               title: 'Изменить фото',
               subtitle: 'Загрузить новое фото профиля',
               onTap: onChangePhotoTap,
-            ),
-
-            Divider(
-              height: 1,
-              indent: 16,
-              endIndent: 16,
-              color: theme.dividerColor,
             ),
 
             // Специальный ListTile для организаций
