@@ -20,7 +20,7 @@ class ProfileHeaderCard extends StatelessWidget {
       profile.patronymic,
     ].where((part) => part != null && part.isNotEmpty).toList();
 
-    return parts.join(' ');
+    return parts.isEmpty ? 'ФИО не указано' : parts.join(' ');
   }
 
   @override

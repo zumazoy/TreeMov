@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:treemov/core/themes/app_text_styles.dart';
 import 'package:treemov/shared/data/models/lesson_response_model.dart';
-import 'package:treemov/temp/main_screen.dart';
+import 'package:treemov/temp/teacher_screen.dart';
 
 class DailyScheduleCard extends StatelessWidget {
   final List<LessonResponseModel> todayLessons;

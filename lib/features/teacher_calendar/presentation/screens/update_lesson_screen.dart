@@ -3,7 +3,7 @@ import 'package:treemov/core/themes/app_colors.dart';
 import 'package:treemov/core/themes/app_text_styles.dart';
 import 'package:treemov/core/widgets/layout/nav_bar.dart';
 import 'package:treemov/shared/domain/entities/lesson_entity.dart';
-import 'package:treemov/temp/main_screen.dart';
+import 'package:treemov/temp/teacher_screen.dart';
 
 class UpdateLessonScreen extends StatefulWidget {
   final LessonEntity event;

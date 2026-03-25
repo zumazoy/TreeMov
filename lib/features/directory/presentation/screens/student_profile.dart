@@ -4,7 +4,7 @@ import 'package:treemov/features/directory/presentation/widgets/profile_header.d
 import 'package:treemov/features/directory/presentation/widgets/profile_info_section.dart';
 import 'package:treemov/shared/data/models/student_group_response_model.dart';
 import 'package:treemov/shared/domain/entities/student_entity.dart';
-import 'package:treemov/temp/main_screen.dart';
+import 'package:treemov/temp/teacher_screen.dart';
 
 import '../../../../../core/themes/app_colors.dart';
 import '../../../../../core/widgets/layout/nav_bar.dart';

@@ -6,9 +6,9 @@ import 'package:treemov/features/kid_calendar/presentation/screens/calendar_kid.
 import 'package:treemov/features/organizations/presentation/screens/organizations_screen.dart';
 import 'package:treemov/features/registration/presentation/screens/registration_screen.dart';
 import 'package:treemov/features/registration/presentation/screens/verification_code_screen.dart';
-// import 'package:treemov/features/test_home/home_screen.dart';
-import 'package:treemov/temp/main_screen.dart';
 import 'package:treemov/temp/student_screen.dart';
+// import 'package:treemov/features/test_home/home_screen.dart';
+import 'package:treemov/temp/teacher_screen.dart';
 
 class AppRoutes {
   static const String home = '/home';

@@ -5,11 +5,11 @@ import 'package:treemov/core/themes/app_text_styles.dart';
 import 'package:treemov/core/widgets/layout/nav_bar.dart';
 import 'package:treemov/features/teacher_calendar/data/models/attendance_request_model.dart';
 import 'package:treemov/features/teacher_calendar/domain/entities/attendance_entity.dart';
-import 'package:treemov/shared/domain/entities/lesson_entity.dart';
 import 'package:treemov/features/teacher_calendar/presentation/bloc/schedules_bloc.dart';
 import 'package:treemov/features/teacher_calendar/presentation/bloc/schedules_event.dart';
 import 'package:treemov/features/teacher_calendar/presentation/bloc/schedules_state.dart';
-import 'package:treemov/temp/main_screen.dart';
+import 'package:treemov/shared/domain/entities/lesson_entity.dart';
+import 'package:treemov/temp/teacher_screen.dart';
 
 import '../widgets/attendance_parts/lesson_info_card.dart';
 import '../widgets/attendance_parts/statistics_row.dart';

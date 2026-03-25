@@ -7,7 +7,7 @@ import 'package:treemov/features/accrual_points/presentation/bloc/accrual_bloc.d
 import 'package:treemov/shared/data/models/student_group_member_response_model.dart';
 import 'package:treemov/shared/data/models/student_group_response_model.dart';
 import 'package:treemov/shared/domain/entities/student_entity.dart';
-import 'package:treemov/temp/main_screen.dart';
+import 'package:treemov/temp/teacher_screen.dart';
 
 import '../../../directory/presentation/widgets/search_field.dart';
 import '../../domain/entities/point_category_entity.dart';

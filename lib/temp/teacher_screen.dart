@@ -16,9 +16,10 @@ class TeacherScreen extends StatefulWidget {
 
 class _TeacherScreenState extends State<TeacherScreen> {
   late int _currentIndex;
+  final ValueNotifier<int> _calendarRefreshTrigger = ValueNotifier<int>(0);
 
-  final List<Widget> _pages = [
-    const CalendarScreen(),
+  late final List<Widget> _pages = [
+    CalendarScreen(refreshTrigger: _calendarRefreshTrigger),
     const GroupsListScreen(),
     const DirectoryScreen(),
     const ProfileScreen(),
@@ -30,17 +31,27 @@ class _TeacherScreenState extends State<TeacherScreen> {
     _currentIndex = widget.initialIndex;
   }
 
+  void _onTabTapped(int index) {
+    // Если нажимаем на ту же вкладку, что и текущая
+    if (_currentIndex == index) {
+      // Индекс 0 - календарь
+      if (index == 0) {
+        _calendarRefreshTrigger.value++;
+      }
+    } else {
+      setState(() {
+        _currentIndex = index;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: _onTabTapped,
       ),
     );
   }

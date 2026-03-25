@@ -9,7 +9,7 @@ import 'package:treemov/features/directory/presentation/widgets/student_item.dar
 import 'package:treemov/shared/data/models/student_group_member_response_model.dart';
 import 'package:treemov/shared/data/models/student_group_response_model.dart';
 import 'package:treemov/shared/domain/entities/student_entity.dart';
-import 'package:treemov/temp/main_screen.dart';
+import 'package:treemov/temp/teacher_screen.dart';
 
 class StudentDirectoryScreen extends StatefulWidget {
   final GroupStudentsResponseModel group;
